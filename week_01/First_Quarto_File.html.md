@@ -11,9 +11,11 @@ format:
 ---
 
 
-    What is unique or good about the visualization? List a few ideas.
-    What could be better? Identify at least one issue with the visualization.
 
+```         
+What is unique or good about the visualization? List a few ideas.
+What could be better? Identify at least one issue with the visualization.
+```
 
 https://ourworldindata.org/half-child-deaths-linked-malnutrition
 
@@ -25,10 +27,16 @@ One positive thing about this visual is that the color hue is used for a color c
 
 https://ourworldindata.org/part-two-how-many-people-die-from-extreme-temperatures-and-how-could-this-change-in-the-future
 
-One positive aspect of the first visual is that it is organized by percentage, rather than alphabetically. Additionally, two distinct colors are used to indicate two different variables and they are very easy to differentiate. Length is also utilized in this visual to express amounts and it is easy to compare the overall differences of the countries. However, there is ink in the visual that could be reduced by removing the percentages listed within the bars. Additionally, the bars are stacked on top of each other, which wouldd make it slightly more difficult to compare some of the data, which is likely why the percentages were included. 
+One positive aspect of the first visual is that it is organized by percentage, rather than alphabetically. Additionally, two distinct colors are used to indicate two different variables and they are very easy to differentiate. Length is also utilized in this visual to express amounts and it is easy to compare the overall differences of the countries. However, there is ink in the visual that could be reduced by removing the percentages listed within the bars. Additionally, the bars are stacked on top of each other, which wouldd make it slightly more difficult to compare some of the data, which is likely why the percentages were included.
 
-```{r}
+
+::: {.cell}
+
+```{.r .cell-code}
 plot(1:20)
-
 ```
 
+::: {.cell-output-display}
+![](First_Quarto_File_files/figure-html/unnamed-chunk-1-1.png){width=672}
+:::
+:::

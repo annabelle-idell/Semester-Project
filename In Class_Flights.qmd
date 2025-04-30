@@ -1,0 +1,21 @@
+---
+title: "Flights"
+format: html
+editor: visual
+---
+
+```{r}
+
+ggplot(data = flights) + 
+  aes(x = dep_delay) +
+  geom_histogram(color = "white") + 
+  ## To transform the scale:
+  scale_x_continuous(trans = "sqrt") # OR scale_x_sqrt() 
+  ## To zoom in:
+  scale_x_continuous(limits = c(-50,250)) # OR
+  coord_cartesian(xlim = c(-25,250))
+  
+  
+
+
+```
