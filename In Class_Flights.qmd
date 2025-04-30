@@ -1,21 +1,42 @@
 ---
 title: "Flights"
-format: html
 editor: visual
+execute:
+  keep-md: true
+warnings: false
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
 ---
 
 ```{r}
 
-ggplot(data = flights) + 
-  aes(x = dep_delay) +
-  geom_histogram(color = "white") + 
-  ## To transform the scale:
-  scale_x_continuous(trans = "sqrt") # OR scale_x_sqrt() 
-  ## To zoom in:
-  scale_x_continuous(limits = c(-50,250)) # OR
-  coord_cartesian(xlim = c(-25,250))
-  
-  
+library(tidyverse)
+library(nycflights13)
 
+ggplot(flights, aes(x = carrier)) +
+  geom_bar(fill = "white", color = "black") +
+  labs(title = "Number of Flights per Airline Carrier",
+       x = "Carrier",
+       y = "Count")
+
+ggplot(flights, aes(x = distance)) +
+  geom_histogram(fill = "lightblue", color = "black") +
+  coord_cartesian(xlim = c(0, 3000)) +
+  labs(title = "Frequency of Distances Flown Between Airports",
+       x = "Distance (mi)",
+       y = "Frequency")
+
+ggplot(flights, aes(x = carrier, y = distance)) +
+  geom_point(color = "blue", pch = 19) +
+  coord_cartesian(ylim = c(0, 3000)) +
+  labs(title = "Distance Between Airports for Each Carrier",
+       x = "Carrier",
+       y = "Distance (mi)")
 
 ```
+
+I investigated the relationship between carrier and distance, and wanted to know if some carriers were more likely to travel longer or shorter distances than others. I chose to use a bar chart to create a visual for carrier because carrier is a discrete variable, and I changed the color to make it more visually appealing and to differentiate it from the distance histogram. I made a histogram to represent distance because there are a lot of points, and I wanted to illustrate the frequency of how many times a distance was flown. I adjusted the limits of the x-axis to cut out the outliers and get a better visual of the most frequenct distances flown, and I changed the color to be more visually appealing. 
+
+My visual representing the relationship between the two variables is a scatterplot, although it looks more like a dot plot. I adjusted the limits of the y-axis to zoom in on the points, and I colored the dots and chose a pch to make the points more visible. The scatterplot of the two variables mimics the bar chart of the carriers, suggesting that the more flights a carrier takes, the more it is to have longer distance flights available. Carriers like FL, OO, and YV had very few flights, and they also traveled significantly shorter distances than many of the other carriers. Additionally, a comparison of the histogram and the scatterplot show that most flights are shorter distances 1300 miles or only a handful of the carriers travel more than 2200 miles.
