@@ -4,5 +4,37 @@ format: html
 editor: visual
 ---
 
+```{r}
 
+ggplot(data = penguins,
+       mapping = aes(x = flipper_length_mm, y = body_mass_g)) +
+  geom_point(aes(color = species, shape = species)) +
+  geom_smooth(method = "lm") +
+  labs(
+    title = "Body Mass and Flipper Length",
+    subtitle = "Dimensions for Adelie, Chinstrap, and Gentoo Penguins",
+    x = "Flipper Length (mm)",
+    y = "Body Mass (g)",
+    color = "Species", shape = "Species"
+  ) +
+  scale_color_colorblind()
 
+```
+
+```{r}
+# Categorical Variable
+
+penguins %>% ggplot(aes(x = fct_infreq(species))) +
+  geom_bar()
+```
+
+```{r}
+
+# Numerical Variable
+
+penguins %>% ggplot(aes(x = body_mass_g)) +
+  geom_histogram(binwidth = 200)
+
+ggplot(penguins, aes(x = body_mass_g)) +
+  geom_density()
+```
