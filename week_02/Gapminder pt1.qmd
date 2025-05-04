@@ -1,0 +1,6 @@
+---
+title: "Gapminder Pt 1"
+format: html
+editor: visual
+---
+
