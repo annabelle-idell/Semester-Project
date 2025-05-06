@@ -1,6 +1,39 @@
 ---
 title: "Gapminder Pt 1"
-format: html
 editor: visual
+execute:
+  keep-md: true
+warnings: false
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
 ---
 
+```{r}
+library(gapminder)
+library(tidyverse)
+
+```
+
+```{r}
+gapminder2 <- filter(gapminder, country != "Kuwait")
+
+View(gapminder2)
+```
+
+```{r}
+ggplot(gapminder2,
+       aes(x = lifeExp, y = gdpPercap, size = pop/1e5)) +
+  geom_point(aes(color = continent)) +
+  labs(x = "Life Expectancy",
+       y = "GDP per Capita",
+       color = "Continent",
+       size = "Population (100k)",
+       ) +
+  scale_y_continuous(trans = "sqrt") +
+  facet_wrap(~ year, nrow = 1, ncol = 12) +
+  theme_bw()
+```
+
+AI was used for a small portion of this assignment on line 27.
