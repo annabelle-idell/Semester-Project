@@ -1,26 +1,43 @@
 ---
 title: "Gapminder pt2"
-format: html
+format: 
+  html:
+    code-fold: true
+    code-line-numbers: true
 editor: visual
+execute: 
+  keep-md: true
+warnings: false
 ---
 
-## Quarto
-
-Quarto enables you to weave together content and executable code into a finished document. To learn more about Quarto see <https://quarto.org>.
-
-## Running Code
-
-When you click the **Render** button a document will be generated that includes both content and the output of embedded code. You can embed code like this:
-
 ```{r}
-1 + 1
+library(tidyverse)
+library(gapminder)
+gapminder2 <- filter(gapminder, country != "Kuwait")
 ```
 
-You can add options to executable code like this
 
 ```{r}
-#| echo: false
-2 * 2
+gapminder_weighted <- gapminder2 %>%
+  group_by(continent, year) %>%
+  summarise(w_gdp = weighted.mean(gdpPercap, w = pop))
+
+gapminder3 <- gapminder2 %>% 
+  left_join(gapminder_weighted, by = c("continent", "year"))
 ```
 
-The `echo: false` option disables the printing of code (only output is displayed).
+
+```{r}
+ggplot(gapminder3, aes(x = year, y = gdpPercap, color = continent, group = country)) + 
+  geom_point(aes(size = pop/4e4)) +
+  geom_line() +
+  geom_line(data = gapminder3, 
+            aes(x = year, y = w_gdp, group = continent), color = "black", linewidth = 1) +
+  labs(x = "Year", y = "GDP per Capita", color = "Continent", size = "Population (100k)") +
+  geom_point(data = gapminder3, aes(x = year, y = w_gdp, group = continent, size = pop/4e4), color = "black") + 
+  facet_wrap(~ continent, nrow = 1, ncol = 5) +
+  theme_bw()
+  
+```
+
+AI was used for troubleshooting code on this project.
