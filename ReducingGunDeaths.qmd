@@ -1,0 +1,42 @@
+---
+title: "Reducing Gun Deaths"
+editor: visual
+execute: 
+  keep-md: true
+warnings: false
+format: 
+  html: 
+    code-fold: true
+    code-line-numbers: true
+---
+
+
+
+```{r}
+library(tidyverse)
+
+gundeaths <- read.csv("C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/full_data.csv")
+
+```
+
+
+FiveThirtyEight has compiled data on annual gun deaths, exploring the causes for the purpose of finding solutions to reduce gun deaths each year. All data included is from 2012 - 2014, and records age, sex, location, level of education, and race, among others. Homicides are defined as deaths caused by assault or legal intervention, mass shootings indicate that three or more people were killed, and other categories are listed shootings of police officers and terrorism gun deaths. Only data for the deaths of U.S. residents was included.
+
+```{r}
+gundeaths2 <- gundeaths %>% 
+  mutate(season = case_when(
+    month %in% c(12, 1, 2) ~ "Winter",
+    month %in% c(3, 4, 5) ~ "Spring",
+    month %in% c(6, 7, 8) ~ "Summer",
+    month %in% c(9, 10, 11) ~ "Fall")) %>% 
+    filter(!is.na(intent)) 
+```
+
+
+```{r}
+ggplot(gundeaths2, aes(x = month, fill = sex)) +
+  geom_bar() +
+  facet_wrap( ~intent, nrow = 1, ncol = 4) +
+  theme_bw()
+```
+
