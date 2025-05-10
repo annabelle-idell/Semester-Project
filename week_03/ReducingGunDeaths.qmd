@@ -34,9 +34,9 @@ gundeaths2 <- gundeaths %>%
 
 
 ```{r}
-ggplot(gundeaths2, aes(x = month, fill = sex)) +
+ggplot(gundeaths2, aes(x = intent)) +
   geom_bar() +
-  facet_wrap( ~intent, nrow = 1, ncol = 4) +
+  facet_wrap( ~season, nrow = 1, ncol = 4) +
   theme_bw()
 ```
 
