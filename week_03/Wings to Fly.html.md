@@ -76,7 +76,7 @@ The following object is masked from 'package:readr':
 
 ```{.r .cell-code}
 flights2 <- flights %>%
-  filter(dep_time < 1200)
+  filter(sched_dep_time < 1200)
 
 flights3 <- flights %>% 
   filter(carrier == "DL")
@@ -99,6 +99,16 @@ ggplot(flights2, aes(x = carrier, y = dep_delay)) +
   theme_classic()
 ```
 
+::: {.cell-output .cell-output-stderr}
+
+```
+Warning: Removed 2079 rows containing non-finite outside the scale range
+(`stat_boxplot()`).
+```
+
+
+:::
+
 ::: {.cell-output-display}
 ![](Wings-to-Fly_files/figure-html/unnamed-chunk-3-1.png){width=672}
 :::
@@ -109,10 +119,21 @@ ggplot(flights2, aes(x = carrier, y = dep_delay, color = origin)) +
   geom_hline(yintercept = 0, linetype = "dashed", color = "gray") +
   coord_cartesian(ylim = c(-25, 400)) +
   scale_y_continuous(trans = asinh_trans()) +
+  scale_x_discrete(guide = guide_axis(angle = 90)) +
   labs( title = "Departure Delays for Morning Flights", x = "Airline", y = "Departure Delay (min)") + 
   facet_wrap( ~origin, nrow = 1, ncol = 3) +
   theme_classic()
 ```
+
+::: {.cell-output .cell-output-stderr}
+
+```
+Warning: Removed 2079 rows containing non-finite outside the scale range
+(`stat_boxplot()`).
+```
+
+
+:::
 
 ::: {.cell-output-display}
 ![](Wings-to-Fly_files/figure-html/unnamed-chunk-3-2.png){width=672}
@@ -120,9 +141,9 @@ ggplot(flights2, aes(x = carrier, y = dep_delay, color = origin)) +
 :::
 
 
-The origin airport with the lowest 75th percentile of flights leaving before noon with delayed departure is YV. Overall, YV flights depart ahead of schedule for the majority of their flights.
+The origin airport with the lowest 75th percentile of flights leaving before noon with delayed departure is US. Overall, US flights depart ahead of schedule for the majority of their flights.
 
-However, for each of these airports, the airline carrier with the lowest 75th percentile is different. Departing from EWR airport, 9E, DL, and US are nearly exactly tied for the lowest 75th percentile of delayed departure flights. At JFK ariport, HA and DL are nearly exactly tied for the lowest 75th percentile of delayed departure flights. At LGA, US and YV are tied for the lowest 75th percentile of delayed departure flights. This means that 
+However, for each of these airports, the airline carrier with the lowest 75th percentile is different. Departing from EWR airport, 9E and US are nearly exactly tied for the lowest 75th percentile of delayed departure flights. At JFK ariport, HA and DL are nearly exactly tied for the lowest 75th percentile of delayed departure flights. At LGA, US claims the lowest 75th percentile of delayed departure flights.
 
 ## Which origin airport is best to minimize my chances of a late arrival when I am using Delta Airlines?
 
