@@ -1,0 +1,38 @@
+---
+title: "Clean and Reformat"
+author: "Annabelle Idell"
+format: 
+  html:
+    code-fold: true
+    code-line-numbers: true
+editor: visual
+execute: 
+  keep-md: true
+warnings: false
+---
+
+
+```{r}
+library(tidyverse)
+Darts <- readRDS("Dart_Expert_Dow_6month_anova.rds")
+Darts
+```
+
+
+
+```{r}
+darts2 <- Darts %>% 
+  pivot_wider(names_from = "variable", values_from = "value") %>% 
+  separate(contest_period, into = c("month_begin", "year_end")) %>% 
+  separate(year_end, into = c("month_end", "year_end"), sep = -4, remove = FALSE) %>%
+  mutate(month_end)
+
+#start with separate, then mutate, then pivot wider
+
+darts2
+```
+
+
+```{r}
+
+```

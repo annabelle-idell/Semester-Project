@@ -1,0 +1,22 @@
+---
+title: "Country Heights"
+author: "Annabelle Idell"
+format: html
+editor: visual
+---
+
+
+```{r}
+library(readxl)
+library(tidyverse)
+Height <- read_excel("C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/week_04/Height.xlsx")
+```
+
+```{r}
+View(Height)
+```
+
+```{r}
+View(Height)
+
+```

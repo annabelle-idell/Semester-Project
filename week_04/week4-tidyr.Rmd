@@ -28,6 +28,7 @@ To start, run this code to read in the data:
 ```{r echo=TRUE}
 library(tidyverse, warn.conflicts = FALSE)
 dat <- read_csv("https://byuistats.github.io/M335/data/rcw_reshape.csv")
+View(dat)
 ```
 
 *Is the data in long or wide format? How can you tell?*
@@ -40,9 +41,13 @@ Instructions:
 
 ```{r wide_v_long}
 #convert it to wide here
-
+dat %>% pivot_wider(names_from = Department, values_from = Count) %>% 
 
 #now convert the wide data back to long format
+pivot_longer(cols = !c(Year, Semester, Semester_Date),
+             names_to = "Dept", 
+             values_to = "count", values_drop_na = T)
+
 
 ```
 
@@ -67,8 +72,9 @@ Instructions:
 4. Using one (or more) of these commands, edit the original dataset so that the implicit missing values are made explicit; and instead of a missing value for "Count" they have zeros.  Save this dataset as zeros.
 
 ```{r zeros}
+# put zeroes in for NA
 
-
+zeros <- dat %>% complete(nesting(Year, Semester), Department, fill = list(Count = 0))
 
 ```
 
@@ -79,11 +85,15 @@ Instructions:
 Starting with your zeros data:
 
 5. Take Semester_Date column and separate it into a year, month, and day columns.
-6. unite() the Year and Semester columns for potentially easier labelling of the graphic. (I actually prefer using paste() instead of unite(), so you could get familiar with that command as well)
+6. unite() the Year and Semester columns for potentially easier labeling of the graphic. (I actually prefer using paste() instead of unite(), so you could get familiar with that command as well)
 7. Now create a line chart that shows the combined Year-Semester variable along the x axis and the count of projects on the y axis for each department.
 
 ```{r separate}
+df <- zeros %>% separate(col = Semester_Date, into = c("month", "day", "yr"), sep = "/", remove = F) %>% mutate(yr_sem = paste(Year, Semester)) %>% 
+  unite("new column", Year, Semester)
 
+df %>%  ggplot(aes(x = yr_sem, y = Count, color = Department, group = Department)) +
+  geom_line()
 ```
 
 You may notice that the semesters are out of chronological order. That is because the new combined column of year and semester is probably being treated as a character vector, which will always be in alphabetical order.
@@ -91,7 +101,10 @@ You may notice that the semesters are out of chronological order. That is becaus
 We want to make the Year-Semester column a factor so that we can control/specify the order of the levels.
 
 ```{r}
-
+df %>%  mutate(yr_sem = factor(yr_sem, levels = c("2016 Spring", "2016 Fall", "2017 Winter", "2017 Spring", "2017 Fall", "2018 Winter"))) %>%
+  ggplot(aes(x = yr_sem, y = Count, color = Department, group = Department)) +
+  geom_line()
+  
 
 ```
 
