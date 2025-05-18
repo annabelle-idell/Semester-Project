@@ -123,7 +123,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>Height <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/week_04/Height.xlsx"</span>, <span class="at">skip =</span> <span class="dv">1</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>Height <span class="ot">&lt;-</span> <span class="fu">read_excel</span>(<span class="st">"C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/week_04/Height.xlsx"</span>, <span class="at">skip =</span> <span class="dv">1</span>)</span>
+<span id="cb3-2"><a href="#cb3-2"></a></span>
+<span id="cb3-3"><a href="#cb3-3"></a><span class="fu">View</span>(Height)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
@@ -131,24 +133,40 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb4"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1"></a>heights2 <span class="ot">&lt;-</span> Height <span class="sc">%&gt;%</span></span>
 <span id="cb4-2"><a href="#cb4-2"></a>  <span class="fu">mutate</span>(<span class="st">"country"</span> <span class="ot">=</span> <span class="st">`</span><span class="at">Continent, Region, Country</span><span class="st">`</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">select</span>(<span class="fu">c</span>(Code, country, <span class="st">"1810"</span>, <span class="st">"1820"</span>, <span class="st">"1830"</span>, <span class="st">"1840"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-3"><a href="#cb4-3"></a>  <span class="fu">select</span>(<span class="fu">c</span>(Code, country, <span class="st">"1810"</span><span class="sc">:</span><span class="st">"1980"</span>)) <span class="sc">%&gt;%</span> </span>
 <span id="cb4-4"><a href="#cb4-4"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(Code) <span class="sc">&amp;</span> <span class="sc">!</span><span class="fu">is.na</span>(country)) <span class="sc">%&gt;%</span></span>
-<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">filter</span>(country <span class="sc">!=</span> <span class="st">"Germany"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-6"><a href="#cb4-6"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">'1810'</span>, <span class="st">'1820'</span>, <span class="st">'1830'</span>, <span class="st">'1840'</span>), </span>
+<span id="cb4-5"><a href="#cb4-5"></a>  <span class="fu">filter</span>(country <span class="sc">!=</span> <span class="st">"Federal Republic of Germany (until 1990)"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-6"><a href="#cb4-6"></a>  <span class="fu">pivot_longer</span>(<span class="fu">c</span>(<span class="st">'1810'</span><span class="sc">:</span><span class="st">'1980'</span>), </span>
 <span id="cb4-7"><a href="#cb4-7"></a>               <span class="at">names_to =</span> <span class="st">"year_decade"</span>, </span>
 <span id="cb4-8"><a href="#cb4-8"></a>               <span class="at">values_to =</span> <span class="st">"height_cm"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb4-9"><a href="#cb4-9"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(height_cm))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-9"><a href="#cb4-9"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(height_cm))</span>
+<span id="cb4-10"><a href="#cb4-10"></a>  </span>
+<span id="cb4-11"><a href="#cb4-11"></a></span>
+<span id="cb4-12"><a href="#cb4-12"></a></span>
+<span id="cb4-13"><a href="#cb4-13"></a><span class="co">#'1810':'1980'</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">ggplot</span>(heights2, <span class="fu">aes</span>(<span class="at">x =</span> year_decade, <span class="at">y =</span> height_cm)) <span class="sc">+</span></span>
-<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">geom_jitter</span>(<span class="at">color =</span> <span class="st">"darkgray"</span>, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">size =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
-<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">geom_jitter</span>(<span class="at">data =</span> <span class="fu">subset</span>(heights2, country <span class="sc">==</span> <span class="st">"Federal Republic of Germany (until 1990)"</span>), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">size =</span> <span class="fl">2.5</span>) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1"></a><span class="fu">ggplot</span>(heights2, <span class="fu">aes</span>(<span class="at">x =</span> year_decade, <span class="at">y =</span> height_cm, <span class="at">group =</span> country)) <span class="sc">+</span></span>
+<span id="cb5-2"><a href="#cb5-2"></a>  <span class="fu">geom_line</span>(<span class="at">color =</span> <span class="st">"darkgray"</span>, <span class="at">pch =</span> <span class="dv">19</span>) <span class="sc">+</span></span>
+<span id="cb5-3"><a href="#cb5-3"></a>  <span class="fu">geom_line</span>(<span class="at">data =</span> <span class="fu">subset</span>(heights2, country <span class="sc">==</span> <span class="st">"Germany"</span>), <span class="at">color =</span> <span class="st">"blue"</span>, <span class="at">pch =</span> <span class="dv">19</span>, <span class="at">size =</span> <span class="dv">1</span>) <span class="sc">+</span></span>
 <span id="cb5-4"><a href="#cb5-4"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year (Decades)"</span>, <span class="at">y =</span> <span class="st">"Height (cm)"</span>) <span class="sc">+</span></span>
 <span id="cb5-5"><a href="#cb5-5"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_line(color = "darkgray", pch = 19): Ignoring unknown
+parameters: `shape`</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
+ℹ Please use `linewidth` instead.</code></pre>
+</div>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning in geom_line(data = subset(heights2, country == "Germany"), color =
+"blue", : Ignoring unknown parameters: `shape`</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -157,8 +175,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-<p>The data displayed features the average heights for countries around the world over four decades. Although a claim has been made that humans are growing taller over time, this data suggests that, at least in the 1800’s, humans were growing to shorter heights over time. Highlighted in blue, the Federal Republic of Germany demonstrates a decline in the average height for their population over the course of four decades.This collection of worldwide data can’t tell us if human height is increasing in recent decades, but if the trend from this graph continued then humans would likely be getting shorter over time.</p>
-<p>There may be many reasons besides evolution for a slow decline average height over the years. Between 1810 and 1840, some nations experienced wars, illnesses like influenza, and the industrial revolution. These events might have influenced the number of men and women growing to adulthood, and the health of developing children.</p>
+<p>The data displayed features the average heights for countries around the world over four decades. A claim has been made that humans are growing taller over time, which is supported by the data in this visual. Before 1840, there appears to be very little growth. Gradually after that point, height seems to climb, with many countries even surpassing 170cm tall. Highlighted in blue, the Federal Republic of Germany declined in height until 1850, when average height began to grow until reaching over 180 cm in 1980. From looking at this visual, I would support the claim that height is growing taller over the years, faster for some countries than others, but generally trending upward. I would also predict that average height continues to increase after 1980.</p>
 
 </main>
 <!-- /main column -->

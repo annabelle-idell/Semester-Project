@@ -1,0 +1,24 @@
+---
+title: "Combining Height"
+format: html
+editor: visual
+---
+
+
+```{r}
+library(downloader)
+library(tidyverse)
+library(readxl)
+```
+
+
+
+```{r}
+download("file path.xlsx", dest = "example_file.xlsx")
+read_xl
+
+bob <- tempfile()
+download(file path, dest = bob)
+
+```
+

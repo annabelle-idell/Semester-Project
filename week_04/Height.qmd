@@ -15,31 +15,35 @@ warnings: false
 library(readxl)
 library(tidyverse)
 Height <- read_excel("C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/week_04/Height.xlsx", skip = 1)
+
+View(Height)
 ```
 
 
 ```{r}
 heights2 <- Height %>%
   mutate("country" = `Continent, Region, Country`) %>% 
-  select(c(Code, country, "1810", "1820", "1830", "1840")) %>% 
+  select(c(Code, country, "1810":"1980")) %>% 
   filter(!is.na(Code) & !is.na(country)) %>%
-  filter(country != "Germany") %>% 
-  pivot_longer(c('1810', '1820', '1830', '1840'), 
+  filter(country != "Federal Republic of Germany (until 1990)") %>% 
+  pivot_longer(c('1810':'1980'), 
                names_to = "year_decade", 
                values_to = "height_cm") %>% 
   filter(!is.na(height_cm))
   
+
+
+#'1810':'1980'
 ```
 
 
 ```{r}
-ggplot(heights2, aes(x = year_decade, y = height_cm)) +
-  geom_jitter(color = "darkgray", pch = 19, size = 2) +
-  geom_jitter(data = subset(heights2, country == "Federal Republic of Germany (until 1990)"), color = "blue", pch = 19, size = 2.5) +
+ggplot(heights2, aes(x = year_decade, y = height_cm, group = country)) +
+  geom_line(color = "darkgray", pch = 19) +
+  geom_line(data = subset(heights2, country == "Germany"), color = "blue", pch = 19, size = 1) +
   labs(x = "Year (Decades)", y = "Height (cm)") +
   theme_bw()
 ```
 
-The data displayed features the average heights for countries around the world over four decades. Although a claim has been made that humans are growing taller over time, this data suggests that, at least in the 1800's, humans were growing to shorter heights over time. Highlighted in blue, the Federal Republic of Germany demonstrates a decline in the average height for their population over the course of four decades.This collection of worldwide data can't tell us if human height is increasing in recent decades, but if the trend from this graph continued then humans would likely be getting shorter over time. 
+The data displayed features the average heights for countries around the world over four decades. A claim has been made that humans are growing taller over time, which is supported by the data in this visual. Before 1840, there appears to be very little growth. Gradually after that point, height seems to climb, with many countries even surpassing 170cm tall. Highlighted in blue, the Federal Republic of Germany declined in height until 1850, when average height began to grow until reaching over 180 cm in 1980. From looking at this visual, I would support the claim that height is growing taller over the years, faster for some countries than others, but generally trending upward. I would also predict that average height continues to increase after 1980. 
 
-There may be many reasons besides evolution for a slow decline average height over the years. Between 1810 and 1840, some nations experienced wars, illnesses like influenza, and the industrial revolution. These events might have influenced the number of men and women growing to adulthood, and the health of developing children. 
