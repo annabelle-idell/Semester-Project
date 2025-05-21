@@ -196,7 +196,7 @@ Warning: Removed 452 rows containing missing values or values outside the scale 
 ```{.r .cell-code}
 ggplot(flights3, aes(x = origin, y = arr_delay, color = origin)) +
   geom_boxplot() +
-  labs(title = "Delayed Arrival Flying Delta", x = "Arrival Delay (min)", y = "Origin Airport") +
+  labs(title = "Delayed Arrival Flying Delta", x = "Origin Airport", y = "Arrival Delay (min)") +
   coord_cartesian(ylim = c(-50, 400)) +
   theme_bw()
 ```
@@ -218,4 +218,3 @@ Warning: Removed 452 rows containing non-finite outside the scale range
 
 
 Looking at the scatterplot, the closer a flight arrives to the scheduled arrival time, the closer the line should be to zero, and below zero indicates that the flight arrived ahead of schedule. Although both JFK and LGA have more flight arrivals delayed than EWR, they also have more flights that arrive early. The volume of flights going through these airports make it difficult to discern which airport less late arrivals. However, when looking at the boxplot, it is easier to see that JFK has a lower median of delayed arrivals, as well as a lower 75th percentile. In other words, flights departing from JFk have a minimized chance of experiencing delayed arrival times in comparison with EWR and LGA.
-
