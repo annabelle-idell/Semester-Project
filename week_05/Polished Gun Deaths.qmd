@@ -1,0 +1,76 @@
+---
+title: "Polished Gun Deaths"
+editor: visual
+execute: 
+  keep-md: true
+warnings: false
+format: 
+  html: 
+    code-fold: true
+    code-line-numbers: true
+---
+
+```{r}
+library(tidyverse)
+
+gundeaths <- read_csv("C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/week_03/full_data.csv")
+
+```
+
+FiveThirtyEight has compiled data on annual gun deaths, exploring the causes for the purpose of finding solutions to reduce gun deaths each year. All data included is from 2012 - 2014, and records age, sex, location, level of education, and race, among others. Homicides are defined as deaths caused by assault or legal intervention, mass shootings indicate that three or more people were killed, and other categories are listed shootings of police officers and terrorism gun deaths. Only data for the deaths of U.S. residents was included.
+
+```{r}
+gundeaths2 <- gundeaths %>%
+  mutate(month2 = as.numeric(month)) %>% 
+  mutate(season = case_when(
+    month2 %in% c(12, 1, 2) ~ "Winter",
+    month2 %in% c(3, 4, 5) ~ "Spring",
+    month2 %in% c(6, 7, 8) ~ "Summer",
+    month2 %in% c(9, 10, 11) ~ "Fall")) %>% 
+  filter(!is.na(intent))
+  
+```
+
+
+```{r}
+ggplot(gundeaths2, aes(x = reorder(intent, table(intent)[intent]), fill = intent)) +
+  geom_bar() +
+  facet_wrap( ~season, nrow = 4, ncol = 1) +
+  labs(x = "Intent", 
+       y = "Amount per Season",
+       title = "Suicide is the leading cause of gun deaths",
+       subtitle = "Followed by homicide",
+       caption = "data from FiveThirtyEight") +
+  coord_flip() +
+  scale_x_discrete(labels = NULL) +
+  theme_minimal()
+  
+```
+
+  
+```{r}  
+ggplot(gundeaths2, aes(x = age, fill= season)) +
+  geom_bar() +
+  scale_fill_manual(values = c("Winter" = "lightblue", 
+                               "Spring" = "pink", 
+                               "Summer" = "yellow", 
+                               "Fall" = "orange")) +
+  facet_wrap(~month, nrow = 4, ncol = 3, labeller = as_labeller(c(
+  "01" = "January", "02" = "February", "03" = "March", "04" = "April", 
+  "05" = "May", "06" = "June", "07" = "July", "08" = "August", 
+  "09" = "September", "10" = "October", "11" = "November", "12" = "December"))) +
+  labs(x = "Age at Death", 
+       y = "Number of Deaths in the Month",
+       title = "Gun deaths generally decrease with age",
+       subtitle = "This pattern applies to all seasons",
+       caption = "data from FiveThirtyEight") +
+  scale_x_continuous(breaks = seq(20, 80, by = 20)) +
+  theme_minimal()
+```
+
+The first graph addresses the amount of gun deaths that can be attributed to intent for each season. Consistently, suicide is the leading reason for gun deaths, followed by homicide, and then accident. Interestingly, Summer sees the highest rates of gun deaths for each category except Accident, and Winter sees the lowest amount. 
+
+The second graph addresses the rates of gun deaths by age in each month. The highest spike can be seen in April around the 20s, and the lowest count overall can be found in February. Each month noticeably follows a similar pattern of distribution of age, with some variability for count.
+
+_________________________________________________
+I chose to use Gemini and ChatGPT AI to assist me with this assignment by troubleshooting coding errors and locating the appropriate functions for what I needed. I chose to use this tool because it could understand the specifics of my code, locate syntax errors, and provide useful alternatives for the mistakes I was making. It affected my learning by showing me new ways to accomplish a task. While using AI, I also used resources like the online textbook and code from previous assignments
