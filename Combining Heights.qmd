@@ -10,7 +10,6 @@ execute:
   warnings: false
 ---
 
-
 ```{r}
 library(downloader)
 library(tidyverse)
@@ -82,9 +81,7 @@ combined_height <- bind_rows(german, bavarian, south_east, bureau, wisconsin)
 
 ```
 
-
 To tidy up the datasets I mutated the height and birth year columns to have the same column names. I also multiplied or divided height by 2.54 to get measurements in both inches and centimeters, because most datasets only had height listed as one or the other. For the Bureau and Wisconsin datasets I also had to change the birth_year to a numeric variable for the binding function to work. After mutating the columns so that height and birth year were standardized across the datasets, I selected only the necessary columns from each set. For the Bureau data, I also filtered the sex to only include male data. Within the Wisconsin dataset, I decided to filter out heights above 81 inches and below 55 inches, and birth years earlier than 1910, to eliminate any possible outliers or impossible values (like negative birth years).
-
 
 ```{r}
 ggplot(combined_height, aes(x = birth_year, y = height_cm, colour = study)) + 
@@ -96,7 +93,7 @@ ggplot(combined_height, aes(x = birth_year, y = height_cm, colour = study)) +
   
 ```
 
-Compared to the previous data, this combined data from soldiers, bureau statistics, and a university survey tells a different story. The black line, representing the mean height over the years, suggests that human height is staying about the same - around 170cm tall, with a dip in the 1800s. The contradiction of the two sets of data might be explained by the differences in population being surveyed between the two. 
+Compared to the previous data, this combined data from soldiers, bureau statistics, and a university survey tells a different story. The black line, representing the mean height over the years, suggests that human height is staying about the same - around 170cm tall, with a dip in the 1800s. The contradiction of the two sets of data might be explained by the differences in population being surveyed between the two.
 
 Firstly, a large portion of this data came from conscripts and prisoners in wartime, which historically were comprised of mostly teenage boys and young men, who might still have been growing, or were malnourished during their time in the war. Additionally, the sample from University of Wisconsin is made up of males and females, which is different from the other data, and may lower the mean as men are taller than women on average.
 

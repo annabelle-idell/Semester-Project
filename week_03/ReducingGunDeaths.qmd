@@ -37,7 +37,10 @@ ggplot(gundeaths2, aes(x = intent)) +
   labs(x = "Intent", y = "Amount per Season") +
   coord_flip() +
   theme_bw()
+```
 
+
+```{r}
 ggplot(gundeaths2, aes(x = age)) +
   geom_bar() +
   facet_wrap(~month, nrow = 4, ncol = 3) +
