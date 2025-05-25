@@ -149,3 +149,6 @@ Warning: Using `size` aesthetic for lines was deprecated in ggplot2 3.4.0.
 ![](Age-at-Childbirth-US_files/figure-html/unnamed-chunk-3-1.png){width=672}
 :::
 :::
+
+
+I chose to use Gemini and ChatGPT AI to assist me with this assignment by locating bugs that I was having trouble finding, troubleshooting functions that weren't working like I thought they would, and learning new ways to accomplish something when I couldn't find it in the textbook. I chose to use both of them because sometimes they are not reliable and I like to fact check what I am given, and also because I was able to get specific feedback for my unique needs. It affected my learning by showing me new ways to do things, and also explaining why my code worked for other projects but not this one. For example, I was having trouble getting the tick marks on the x axis to touch y = 15, although it worked during the code along, and I was able to get an explanation of the differences between what I was doing vs. trying to do.
