@@ -21,6 +21,7 @@ FiveThirtyEight has compiled data on annual gun deaths, exploring the causes for
 
 ```{r}
 gundeaths2 <- gundeaths %>%
+  filter(intent %in% c("Accidental", "Homicide", "Suicide")) %>% 
   mutate(month2 = as.numeric(month)) %>% 
   mutate(season = case_when(
     month2 %in% c(12, 1, 2) ~ "Winter",
@@ -31,14 +32,14 @@ gundeaths2 <- gundeaths %>%
 ```
 
 ```{r}
-ggplot(gundeaths2, aes(x = intent)) +
+ggplot(gundeaths2, aes(x = intent, fill = intent)) +
   geom_bar() +
-  facet_wrap( ~season, nrow = 4, ncol = 1) +
-  labs(x = "Intent", y = "Amount per Season") +
-  coord_flip() +
-  theme_bw()
+  facet_wrap( ~season, nrow = 1, ncol = 4) +
+  theme_bw() +
+  theme(axis.text.x = element_text(angle = 45)) +
+  labs(x = NULL, y = NULL)
+  
 ```
-
 
 ```{r}
 ggplot(gundeaths2, aes(x = age)) +
@@ -48,6 +49,6 @@ ggplot(gundeaths2, aes(x = age)) +
   theme_bw()
 ```
 
-The first graph addresses the amount of gun deaths that can be attributed to intent for each season. Consistently, suicide is the leading reason for gun deaths, followed by homicide, and then accident. Interestingly, Summer sees the highest rates of gun deaths for each category except Accident, and Winter sees the lowest amount. 
+The first graph addresses the amount of gun deaths that can be attributed to intent for each season. Consistently, suicide is the leading reason for gun deaths, followed by homicide, and then accident. Interestingly, Summer sees the highest rates of gun deaths for each category except Accident, and Winter sees the lowest amount.
 
 The second graph addresses the rates of gun deaths by age in each month. The highest spike can be seen in April around the 20s, and the lowest count overall can be found in February. Each month noticeably follows a similar pattern of distribution of age, with some variability for count.

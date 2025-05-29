@@ -1,0 +1,38 @@
+---
+title: "Age of Planes"
+format: html
+editor: visual
+---
+
+
+
+```{r}
+library(tidyverse)
+library(nycflights13)
+
+glimpse(flights)
+glimpse(planes)
+```
+
+
+
+```{r}
+plane_age <- planes %>% 
+  mutate(age = 2013 - year) %>% 
+  inner_join(flights, by = join_by(tailnum)) %>%
+  left_join(airports, by = join_by(origin == faa)) %>%
+  left_join(airports, by = join_by(dest == faa), suffix = c(".origin", ".dest")) %>% glimpse()
+  
+```
+
+
+
+```{r}
+
+```
+
+
+
+```{r}
+
+```
