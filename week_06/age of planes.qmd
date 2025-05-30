@@ -21,18 +21,48 @@ plane_age <- planes %>%
   mutate(age = 2013 - year) %>% 
   inner_join(flights, by = join_by(tailnum)) %>%
   left_join(airports, by = join_by(origin == faa)) %>%
-  left_join(airports, by = join_by(dest == faa), suffix = c(".origin", ".dest")) %>% glimpse()
+  left_join(airports, by = join_by(dest == faa), suffix = c(".origin", ".dest")) %>% 
+  filter(!is.na(age)) %>% 
+  mutate(age_group = case_when(
+    age %in% c(0:10) ~ "0-10",
+    age %in% c(11:20) ~ "11-20",
+    age %in% c(21:30) ~ "21-30",
+    age %in% c(30:100) ~ ">30"
+  ))
+```
+
+
+## Departure Delay by Age
+```{r}
+
+ggplot(plane_age, aes(x = age, y = dep_delay)) +
+  geom_col() +
+  coord_cartesian(xlim = c(0, 30)) +
+  theme_bw()
   
 ```
 
 
-
+## Departure Delay by Age Groups
 ```{r}
+
+ggplot(plane_age, aes(x = age_group, y = dep_delay)) +
+  geom_col() +
+  theme_bw()
 
 ```
 
 
-
+## Distribution of Age by Carrier
 ```{r}
 
+plane_carrier <- plane_age %>% 
+  left_join(airlines, by = join_by(carrier))
+
+ggplot(plane_carrier, aes(x = carrier, y = age)) +
+  geom_col() +
+  theme_bw()
+
 ```
+
+
