@@ -2,6 +2,8 @@
 title: "Age of Planes"
 format: html
 editor: visual
+execute: 
+  keep-md: true
 ---
 
 
