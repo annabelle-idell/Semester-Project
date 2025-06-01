@@ -7,7 +7,6 @@ execute:
 ---
 
 
-
 ```{r}
 library(tidyverse)
 library(nycflights13)
