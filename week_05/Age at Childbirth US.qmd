@@ -10,13 +10,11 @@ execute:
 warnings: false
 ---
 
-
 ```{r}
 library(tidyverse)
 library(ggrepel)
 library(ggtext)
 ```
-
 
 ```{r}
 df <- read_csv("https://ourworldindata.org/grapher/period-average-age-of-mothers-birth-order.csv?v=1&csvType=full&useColumnShortNames=true")

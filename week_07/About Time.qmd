@@ -1,0 +1,76 @@
+---
+title: "It's About Time"
+format:
+  html:
+    code-fold: true
+    code-line-numbers: true
+editor: visual
+execute: 
+  keep-md: true
+warnings: false
+---
+
+```{r}
+library(tidyverse)
+library(lubridate)
+
+sales <- read.csv("https://byuistats.github.io/M335/data/sales.csv")
+
+sales2 <- sales %>% 
+  filter(Name != "Missing") %>% 
+  filter(Time != "2016-04-20T19:01:00Z") %>% 
+  filter(Time != "2016-05-13T20:27:00Z") %>% 
+  mutate(sale_time = force_tz(ymd_hms(Time), tzone = "America/Denver")) %>% 
+  filter(Amount >0) %>% 
+  rename("Company" = "Name") %>% 
+  separate(sale_time, into = c("date", "timestamp"), sep = -8, remove = FALSE)
+  
+
+transactions <- sales2 %>% 
+  group_by(Company) %>% 
+  summarise(Sales = n())
+
+```
+
+## Gross Revenue Over Time per Company
+
+```{r}
+ggplot(data = sales2, aes(x = sale_time, y = Amount, group = Company, color = Company)) +
+  geom_line(size = .75) +
+  scale_y_continuous(trans = "sqrt") +
+  labs(title = "Gross Revenue Per Company over Three Months",
+       x = NULL, 
+       y = "Gross Revenue (US $)") +
+  theme_minimal() +
+  theme(legend.position = c(0.2, .78))
+
+```
+
+## Transactions per Company
+
+```{r}
+ggplot(data = transactions, aes(x = Company, y = Sales, fill = Company)) + 
+  geom_col() +
+  labs(title = "Transactions per Company", 
+       y = "Transactions") +
+  theme_minimal()
+
+
+```
+
+## Hours of Operation
+
+```{r}
+ggplot(sales2, aes(x = timestamp, y = Amount, color = Company, groups = Company)) +
+  geom_point() +
+  labs(title = "Hours of Operation per Company", 
+       x = "Time of Day",
+       y = "Transaction Amount (US $)") +
+  scale_y_continuous(trans = "sqrt",
+                     limits = c(0, 800)) +
+  facet_wrap(~Company, nrow = 2, ncol = 3) +
+  theme_minimal()
+
+#scale_x_continuous(breaks = seq(0, 24, 2)) +
+
+```
