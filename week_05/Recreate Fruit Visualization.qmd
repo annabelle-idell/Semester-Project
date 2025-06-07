@@ -16,6 +16,7 @@ library(countrycode)
 library(ggplot2)
 library(ggrepel)
 library(gganimate)
+library(scales)
 
 ```
 
@@ -27,9 +28,9 @@ df_fruit <- read_csv("https://ourworldindata.org/grapher/fruit-consumption-vs-gd
 fruit <- df_fruit %>%
   mutate(Continent = countrycode(Entity, origin = "country.name", destination = "continent")) %>% 
   filter(!is.na(ny_gdp_pcap_pp_kd)) %>%
-  rename("fruit_supply" = fruit__00002919__food_available_for_consumption__0645pc__kilograms_per_year_per_capita) %>%
+  rename(fruit_supply = `fruit__00002919__food_available_for_consumption__0645pc__kilograms_per_year_per_capita`) %>%
   filter(!is.na(fruit_supply)) %>% 
-  filter(Year == "2022")
+  filter(Year == 2022)
 
 ```
 
@@ -50,10 +51,8 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
 \nOurWorldinData.org/diet-compositions | CC BY") +
   coord_cartesian(xlim = c(0, 100000)) +
   theme_minimal()
-
 ```
 
-## Kenya, Ghana, and the United States
 
 ```{r}
 specific <- fruit %>% 
@@ -62,6 +61,10 @@ specific <- fruit %>%
 ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   geom_point() +
   geom_point(data = specific, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply), pch = 21, size = 2, color = "black") +
+  scale_y_continuous(breaks = seq(0, 500, 100),
+                     limits = c(0, 500),
+                     labels = label_number(suffix = " kg")) +
+  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ",")) +
   labs(title = "Fruit consumption vs. GDP per capita: Kenya, Ghana, United States",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
        x = "GDP per capita (international-$ in 2021 prices)", 
@@ -82,6 +85,10 @@ specific2 <- fruit %>%
 ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   geom_point() +
   geom_point(data = specific2, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply), pch = 21, size = 2, color = "black") +
+  scale_y_continuous(breaks = seq(0, 500, 100),
+                     limits = c(0, 500),
+                     labels = label_number(suffix = " kg")) +
+  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ",")) +
   labs(title = "Fruit consumption vs. GDP per capita: Oceania",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
        x = "GDP per capita (international-$ in 2021 prices)", 

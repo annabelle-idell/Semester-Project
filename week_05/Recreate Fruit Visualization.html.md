@@ -76,26 +76,22 @@ Warning: package 'gganimate' was built under R version 4.4.3
 :::
 
 ```{.r .cell-code}
-library(av)
+library(scales)
 ```
 
 ::: {.cell-output .cell-output-stderr}
 
 ```
-Warning: package 'av' was built under R version 4.4.3
-```
 
+Attaching package: 'scales'
 
-:::
+The following object is masked from 'package:purrr':
 
-```{.r .cell-code}
-library(gifski)
-```
+    discard
 
-::: {.cell-output .cell-output-stderr}
+The following object is masked from 'package:readr':
 
-```
-Warning: package 'gifski' was built under R version 4.4.3
+    col_factor
 ```
 
 
@@ -131,8 +127,9 @@ dbl (3): Year, fruit__00002919__food_available_for_consumption__0645pc__kilo...
 fruit <- df_fruit %>%
   mutate(Continent = countrycode(Entity, origin = "country.name", destination = "continent")) %>% 
   filter(!is.na(ny_gdp_pcap_pp_kd)) %>%
-  rename("fruit_supply" = fruit__00002919__food_available_for_consumption__0645pc__kilograms_per_year_per_capita) %>%
-  filter(!is.na(fruit_supply))
+  rename(fruit_supply = `fruit__00002919__food_available_for_consumption__0645pc__kilograms_per_year_per_capita`) %>%
+  filter(!is.na(fruit_supply)) %>% 
+  filter(Year == 2022)
 ```
 
 ::: {.cell-output .cell-output-stderr}
@@ -158,7 +155,10 @@ Caused by warning:
 ```{.r .cell-code}
 ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   geom_point(pch = 20) +
-  transition_states(Year) +
+  scale_y_continuous(breaks = seq(0, 500, 100),
+                     limits = c(0, 500),
+                     labels = label_number(suffix = " kg")) +
+  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ",")) +
   labs(title = "Fruit consumption vs. GDP per capita",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
        x = "GDP per capita (international-$ in 2021 prices)", 
@@ -169,14 +169,20 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   theme_minimal()
 ```
 
+::: {.cell-output .cell-output-stderr}
+
+```
+Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`).
+```
+
+
+:::
+
 ::: {.cell-output-display}
-![](Recreate-Fruit-Visualization_files/figure-html/unnamed-chunk-4-1.gif)
+![](Recreate-Fruit-Visualization_files/figure-html/unnamed-chunk-4-1.png){width=672}
 :::
 :::
-
-
-## Kenya, Ghana, and the United States
-
 
 ::: {.cell}
 
@@ -187,6 +193,10 @@ specific <- fruit %>%
 ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   geom_point() +
   geom_point(data = specific, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply), pch = 21, size = 2, color = "black") +
+  scale_y_continuous(breaks = seq(0, 500, 100),
+                     limits = c(0, 500),
+                     labels = label_number(suffix = " kg")) +
+  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ",")) +
   labs(title = "Fruit consumption vs. GDP per capita: Kenya, Ghana, United States",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
        x = "GDP per capita (international-$ in 2021 prices)", 
@@ -196,6 +206,16 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   coord_cartesian(xlim = c(0, 100000)) +
   theme_minimal()
 ```
+
+::: {.cell-output .cell-output-stderr}
+
+```
+Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`).
+```
+
+
+:::
 
 ::: {.cell-output-display}
 ![](Recreate-Fruit-Visualization_files/figure-html/unnamed-chunk-5-1.png){width=672}
@@ -215,6 +235,10 @@ specific2 <- fruit %>%
 ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   geom_point() +
   geom_point(data = specific2, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply), pch = 21, size = 2, color = "black") +
+  scale_y_continuous(breaks = seq(0, 500, 100),
+                     limits = c(0, 500),
+                     labels = label_number(suffix = " kg")) +
+  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ",")) +
   labs(title = "Fruit consumption vs. GDP per capita: Oceania",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
        x = "GDP per capita (international-$ in 2021 prices)", 
@@ -225,10 +249,20 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   theme_minimal()
 ```
 
+::: {.cell-output .cell-output-stderr}
+
+```
+Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`).
+```
+
+
+:::
+
 ::: {.cell-output-display}
 ![](Recreate-Fruit-Visualization_files/figure-html/unnamed-chunk-6-1.png){width=672}
 :::
 :::
 
 
-This was a challenging assignment, and I still feel that I could've done better with more time. I discovered that the chart looks very different when using a linear vs. logarithmic scale, because the website default is logarithmic but the linear model matches mine much closer. I also realized I am not confident in using axis, plot, and legend aspects to polish a graph. However, I did learn how to create a moving graph that tells the story over time, although it did not match the visual perfectly, and this was exciting and helped the graph tell a better story. Emphasizing different aspects of data also draws the eyes and highlights patterns and gives more meaning to the data. I used layering to highlight certain points, as well as ssize adjustments and color contrast. 
+This was a challenging assignment, and I still feel that I could've done better with more time. I discovered that the chart looks very different when using a linear vs. logarithmic scale, because the website default is logarithmic but the linear model matches mine much closer. I also realized I am not confident in using axis, plot, and legend aspects to polish a graph. However, I did learn how to create a moving graph that tells the story over time, which I ended up deciding to remove, and this was an interesting tool to try out. Emphasizing different aspects of data also draws the eyes and highlights patterns and gives more meaning to the data. I used layering to highlight certain points, as well as size adjustments and color contrast.

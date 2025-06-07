@@ -137,23 +137,25 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">library</span>(av)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">library</span>(scales)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'av' was built under R version 4.4.3</code></pre>
-</div>
-<details class="code-fold">
-<summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">library</span>(gifski)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
-</details>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: package 'gifski' was built under R version 4.4.3</code></pre>
+<pre><code>
+Attaching package: 'scales'
+
+The following object is masked from 'package:purrr':
+
+    discard
+
+The following object is masked from 'package:readr':
+
+    col_factor</code></pre>
 </div>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>df_fruit <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://ourworldindata.org/grapher/fruit-consumption-vs-gdp-per-capita.csv?v=1&amp;csvType=full&amp;useColumnShortNames=true"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a>df_fruit <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://ourworldindata.org/grapher/fruit-consumption-vs-gdp-per-capita.csv?v=1&amp;csvType=full&amp;useColumnShortNames=true"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 14355 Columns: 6
@@ -169,11 +171,12 @@ dbl (3): Year, fruit__00002919__food_available_for_consumption__0645pc__kilo...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a>fruit <span class="ot">&lt;-</span> df_fruit <span class="sc">%&gt;%</span></span>
-<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">mutate</span>(<span class="at">Continent =</span> <span class="fu">countrycode</span>(Entity, <span class="at">origin =</span> <span class="st">"country.name"</span>, <span class="at">destination =</span> <span class="st">"continent"</span>)) <span class="sc">%&gt;%</span> </span>
-<span id="cb15-3"><a href="#cb15-3"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ny_gdp_pcap_pp_kd)) <span class="sc">%&gt;%</span></span>
-<span id="cb15-4"><a href="#cb15-4"></a>  <span class="fu">rename</span>(<span class="st">"fruit_supply"</span> <span class="ot">=</span> fruit__00002919__food_available_for_consumption__0645pc__kilograms_per_year_per_capita) <span class="sc">%&gt;%</span></span>
-<span id="cb15-5"><a href="#cb15-5"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(fruit_supply))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a>fruit <span class="ot">&lt;-</span> df_fruit <span class="sc">%&gt;%</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="fu">mutate</span>(<span class="at">Continent =</span> <span class="fu">countrycode</span>(Entity, <span class="at">origin =</span> <span class="st">"country.name"</span>, <span class="at">destination =</span> <span class="st">"continent"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-3"><a href="#cb13-3"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(ny_gdp_pcap_pp_kd)) <span class="sc">%&gt;%</span></span>
+<span id="cb13-4"><a href="#cb13-4"></a>  <span class="fu">rename</span>(<span class="at">fruit_supply =</span> <span class="st">`</span><span class="at">fruit__00002919__food_available_for_consumption__0645pc__kilograms_per_year_per_capita</span><span class="st">`</span>) <span class="sc">%&gt;%</span></span>
+<span id="cb13-5"><a href="#cb13-5"></a>  <span class="fu">filter</span>(<span class="sc">!</span><span class="fu">is.na</span>(fruit_supply)) <span class="sc">%&gt;%</span> </span>
+<span id="cb13-6"><a href="#cb13-6"></a>  <span class="fu">filter</span>(Year <span class="sc">==</span> <span class="dv">2022</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Warning: There was 1 warning in `mutate()`.
@@ -188,47 +191,59 @@ Caused by warning:
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a><span class="fu">ggplot</span>(fruit, <span class="fu">aes</span>(<span class="at">x =</span> ny_gdp_pcap_pp_kd, <span class="at">y =</span> fruit_supply, <span class="at">color =</span> Continent)) <span class="sc">+</span></span>
-<span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">geom_point</span>(<span class="at">pch =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
-<span id="cb17-3"><a href="#cb17-3"></a>  <span class="fu">transition_states</span>(Year) <span class="sc">+</span></span>
-<span id="cb17-4"><a href="#cb17-4"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Fruit consumption vs. GDP per capita"</span>,</span>
-<span id="cb17-5"><a href="#cb17-5"></a>       <span class="at">subtitle =</span> <span class="st">"Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted </span><span class="sc">\n</span><span class="st">for inflation and for differences in living costs between countries."</span>,</span>
-<span id="cb17-6"><a href="#cb17-6"></a>       <span class="at">x =</span> <span class="st">"GDP per capita (international-$ in 2021 prices)"</span>, </span>
-<span id="cb17-7"><a href="#cb17-7"></a>       <span class="at">y =</span> <span class="st">"Fruit supply per person (kilograms per year)"</span>,</span>
-<span id="cb17-8"><a href="#cb17-8"></a>       <span class="at">caption =</span> <span class="st">"Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data </span><span class="sc">\n</span><span class="st">Note: GDP per capita is expressed in international-$ at 2021 prices.</span></span>
-<span id="cb17-9"><a href="#cb17-9"></a><span class="sc">\n</span><span class="st">OurWorldinData.org/diet-compositions | CC BY"</span>) <span class="sc">+</span></span>
-<span id="cb17-10"><a href="#cb17-10"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>)) <span class="sc">+</span></span>
-<span id="cb17-11"><a href="#cb17-11"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">ggplot</span>(fruit, <span class="fu">aes</span>(<span class="at">x =</span> ny_gdp_pcap_pp_kd, <span class="at">y =</span> fruit_supply, <span class="at">color =</span> Continent)) <span class="sc">+</span></span>
+<span id="cb15-2"><a href="#cb15-2"></a>  <span class="fu">geom_point</span>(<span class="at">pch =</span> <span class="dv">20</span>) <span class="sc">+</span></span>
+<span id="cb15-3"><a href="#cb15-3"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">500</span>, <span class="dv">100</span>),</span>
+<span id="cb15-4"><a href="#cb15-4"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>),</span>
+<span id="cb15-5"><a href="#cb15-5"></a>                     <span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">suffix =</span> <span class="st">" kg"</span>)) <span class="sc">+</span></span>
+<span id="cb15-6"><a href="#cb15-6"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">dollar_format</span>(<span class="at">prefix =</span> <span class="st">"$"</span>, <span class="at">big.mark =</span> <span class="st">","</span>)) <span class="sc">+</span></span>
+<span id="cb15-7"><a href="#cb15-7"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Fruit consumption vs. GDP per capita"</span>,</span>
+<span id="cb15-8"><a href="#cb15-8"></a>       <span class="at">subtitle =</span> <span class="st">"Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted </span><span class="sc">\n</span><span class="st">for inflation and for differences in living costs between countries."</span>,</span>
+<span id="cb15-9"><a href="#cb15-9"></a>       <span class="at">x =</span> <span class="st">"GDP per capita (international-$ in 2021 prices)"</span>, </span>
+<span id="cb15-10"><a href="#cb15-10"></a>       <span class="at">y =</span> <span class="st">"Fruit supply per person (kilograms per year)"</span>,</span>
+<span id="cb15-11"><a href="#cb15-11"></a>       <span class="at">caption =</span> <span class="st">"Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data </span><span class="sc">\n</span><span class="st">Note: GDP per capita is expressed in international-$ at 2021 prices.</span></span>
+<span id="cb15-12"><a href="#cb15-12"></a><span class="sc">\n</span><span class="st">OurWorldinData.org/diet-compositions | CC BY"</span>) <span class="sc">+</span></span>
+<span id="cb15-13"><a href="#cb15-13"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>)) <span class="sc">+</span></span>
+<span id="cb15-14"><a href="#cb15-14"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
-<p><img src="Recreate-Fruit-Visualization_files/figure-html/unnamed-chunk-4-1.gif" class="img-fluid figure-img"></p>
+<p><img src="Recreate-Fruit-Visualization_files/figure-html/unnamed-chunk-4-1.png" class="img-fluid figure-img" width="672"></p>
 </figure>
 </div>
 </div>
 </div>
-</section>
-<section id="kenya-ghana-and-the-united-states" class="level2">
-<h2 class="anchored" data-anchor-id="kenya-ghana-and-the-united-states">Kenya, Ghana, and the United States</h2>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb18"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb18-1"><a href="#cb18-1"></a>specific <span class="ot">&lt;-</span> fruit <span class="sc">%&gt;%</span> </span>
-<span id="cb18-2"><a href="#cb18-2"></a>  <span class="fu">filter</span>(Entity <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Kenya"</span>, <span class="st">"Ghana"</span>, <span class="st">"United States"</span>))</span>
-<span id="cb18-3"><a href="#cb18-3"></a></span>
-<span id="cb18-4"><a href="#cb18-4"></a><span class="fu">ggplot</span>(fruit, <span class="fu">aes</span>(<span class="at">x =</span> ny_gdp_pcap_pp_kd, <span class="at">y =</span> fruit_supply, <span class="at">color =</span> Continent)) <span class="sc">+</span></span>
-<span id="cb18-5"><a href="#cb18-5"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb18-6"><a href="#cb18-6"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> specific, <span class="fu">aes</span>(<span class="at">x =</span> ny_gdp_pcap_pp_kd, <span class="at">y =</span> fruit_supply), <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb18-7"><a href="#cb18-7"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Fruit consumption vs. GDP per capita: Kenya, Ghana, United States"</span>,</span>
-<span id="cb18-8"><a href="#cb18-8"></a>       <span class="at">subtitle =</span> <span class="st">"Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted </span><span class="sc">\n</span><span class="st">for inflation and for differences in living costs between countries."</span>,</span>
-<span id="cb18-9"><a href="#cb18-9"></a>       <span class="at">x =</span> <span class="st">"GDP per capita (international-$ in 2021 prices)"</span>, </span>
-<span id="cb18-10"><a href="#cb18-10"></a>       <span class="at">y =</span> <span class="st">"Fruit supply per person (kilograms per year)"</span>,</span>
-<span id="cb18-11"><a href="#cb18-11"></a>       <span class="at">caption =</span> <span class="st">"Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data </span><span class="sc">\n</span><span class="st">Note: GDP per capita is expressed in international-$ at 2021 prices.</span></span>
-<span id="cb18-12"><a href="#cb18-12"></a><span class="sc">\n</span><span class="st">OurWorldinData.org/diet-compositions | CC BY"</span>) <span class="sc">+</span></span>
-<span id="cb18-13"><a href="#cb18-13"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>)) <span class="sc">+</span></span>
-<span id="cb18-14"><a href="#cb18-14"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb17"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb17-1"><a href="#cb17-1"></a>specific <span class="ot">&lt;-</span> fruit <span class="sc">%&gt;%</span> </span>
+<span id="cb17-2"><a href="#cb17-2"></a>  <span class="fu">filter</span>(Entity <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Kenya"</span>, <span class="st">"Ghana"</span>, <span class="st">"United States"</span>))</span>
+<span id="cb17-3"><a href="#cb17-3"></a></span>
+<span id="cb17-4"><a href="#cb17-4"></a><span class="fu">ggplot</span>(fruit, <span class="fu">aes</span>(<span class="at">x =</span> ny_gdp_pcap_pp_kd, <span class="at">y =</span> fruit_supply, <span class="at">color =</span> Continent)) <span class="sc">+</span></span>
+<span id="cb17-5"><a href="#cb17-5"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
+<span id="cb17-6"><a href="#cb17-6"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> specific, <span class="fu">aes</span>(<span class="at">x =</span> ny_gdp_pcap_pp_kd, <span class="at">y =</span> fruit_supply), <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
+<span id="cb17-7"><a href="#cb17-7"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">500</span>, <span class="dv">100</span>),</span>
+<span id="cb17-8"><a href="#cb17-8"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>),</span>
+<span id="cb17-9"><a href="#cb17-9"></a>                     <span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">suffix =</span> <span class="st">" kg"</span>)) <span class="sc">+</span></span>
+<span id="cb17-10"><a href="#cb17-10"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">dollar_format</span>(<span class="at">prefix =</span> <span class="st">"$"</span>, <span class="at">big.mark =</span> <span class="st">","</span>)) <span class="sc">+</span></span>
+<span id="cb17-11"><a href="#cb17-11"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Fruit consumption vs. GDP per capita: Kenya, Ghana, United States"</span>,</span>
+<span id="cb17-12"><a href="#cb17-12"></a>       <span class="at">subtitle =</span> <span class="st">"Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted </span><span class="sc">\n</span><span class="st">for inflation and for differences in living costs between countries."</span>,</span>
+<span id="cb17-13"><a href="#cb17-13"></a>       <span class="at">x =</span> <span class="st">"GDP per capita (international-$ in 2021 prices)"</span>, </span>
+<span id="cb17-14"><a href="#cb17-14"></a>       <span class="at">y =</span> <span class="st">"Fruit supply per person (kilograms per year)"</span>,</span>
+<span id="cb17-15"><a href="#cb17-15"></a>       <span class="at">caption =</span> <span class="st">"Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data </span><span class="sc">\n</span><span class="st">Note: GDP per capita is expressed in international-$ at 2021 prices.</span></span>
+<span id="cb17-16"><a href="#cb17-16"></a><span class="sc">\n</span><span class="st">OurWorldinData.org/diet-compositions | CC BY"</span>) <span class="sc">+</span></span>
+<span id="cb17-17"><a href="#cb17-17"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>)) <span class="sc">+</span></span>
+<span id="cb17-18"><a href="#cb17-18"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -249,15 +264,23 @@ Caused by warning:
 <span id="cb19-4"><a href="#cb19-4"></a><span class="fu">ggplot</span>(fruit, <span class="fu">aes</span>(<span class="at">x =</span> ny_gdp_pcap_pp_kd, <span class="at">y =</span> fruit_supply, <span class="at">color =</span> Continent)) <span class="sc">+</span></span>
 <span id="cb19-5"><a href="#cb19-5"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb19-6"><a href="#cb19-6"></a>  <span class="fu">geom_point</span>(<span class="at">data =</span> specific2, <span class="fu">aes</span>(<span class="at">x =</span> ny_gdp_pcap_pp_kd, <span class="at">y =</span> fruit_supply), <span class="at">pch =</span> <span class="dv">21</span>, <span class="at">size =</span> <span class="dv">2</span>, <span class="at">color =</span> <span class="st">"black"</span>) <span class="sc">+</span></span>
-<span id="cb19-7"><a href="#cb19-7"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Fruit consumption vs. GDP per capita: Oceania"</span>,</span>
-<span id="cb19-8"><a href="#cb19-8"></a>       <span class="at">subtitle =</span> <span class="st">"Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted </span><span class="sc">\n</span><span class="st">for inflation and for differences in living costs between countries."</span>,</span>
-<span id="cb19-9"><a href="#cb19-9"></a>       <span class="at">x =</span> <span class="st">"GDP per capita (international-$ in 2021 prices)"</span>, </span>
-<span id="cb19-10"><a href="#cb19-10"></a>       <span class="at">y =</span> <span class="st">"Fruit supply per person (kilograms per year)"</span>,</span>
-<span id="cb19-11"><a href="#cb19-11"></a>       <span class="at">caption =</span> <span class="st">"Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data </span><span class="sc">\n</span><span class="st">Note: GDP per capita is expressed in international-$ at 2021 prices.</span></span>
-<span id="cb19-12"><a href="#cb19-12"></a><span class="sc">\n</span><span class="st">OurWorldinData.org/diet-compositions | CC BY"</span>) <span class="sc">+</span></span>
-<span id="cb19-13"><a href="#cb19-13"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>)) <span class="sc">+</span></span>
-<span id="cb19-14"><a href="#cb19-14"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb19-7"><a href="#cb19-7"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">breaks =</span> <span class="fu">seq</span>(<span class="dv">0</span>, <span class="dv">500</span>, <span class="dv">100</span>),</span>
+<span id="cb19-8"><a href="#cb19-8"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>),</span>
+<span id="cb19-9"><a href="#cb19-9"></a>                     <span class="at">labels =</span> <span class="fu">label_number</span>(<span class="at">suffix =</span> <span class="st">" kg"</span>)) <span class="sc">+</span></span>
+<span id="cb19-10"><a href="#cb19-10"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="fu">dollar_format</span>(<span class="at">prefix =</span> <span class="st">"$"</span>, <span class="at">big.mark =</span> <span class="st">","</span>)) <span class="sc">+</span></span>
+<span id="cb19-11"><a href="#cb19-11"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Fruit consumption vs. GDP per capita: Oceania"</span>,</span>
+<span id="cb19-12"><a href="#cb19-12"></a>       <span class="at">subtitle =</span> <span class="st">"Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted </span><span class="sc">\n</span><span class="st">for inflation and for differences in living costs between countries."</span>,</span>
+<span id="cb19-13"><a href="#cb19-13"></a>       <span class="at">x =</span> <span class="st">"GDP per capita (international-$ in 2021 prices)"</span>, </span>
+<span id="cb19-14"><a href="#cb19-14"></a>       <span class="at">y =</span> <span class="st">"Fruit supply per person (kilograms per year)"</span>,</span>
+<span id="cb19-15"><a href="#cb19-15"></a>       <span class="at">caption =</span> <span class="st">"Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data </span><span class="sc">\n</span><span class="st">Note: GDP per capita is expressed in international-$ at 2021 prices.</span></span>
+<span id="cb19-16"><a href="#cb19-16"></a><span class="sc">\n</span><span class="st">OurWorldinData.org/diet-compositions | CC BY"</span>) <span class="sc">+</span></span>
+<span id="cb19-17"><a href="#cb19-17"></a>  <span class="fu">coord_cartesian</span>(<span class="at">xlim =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">100000</span>)) <span class="sc">+</span></span>
+<span id="cb19-18"><a href="#cb19-18"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: Removed 1 row containing missing values or values outside the scale range
+(`geom_point()`).</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">
@@ -266,7 +289,7 @@ Caused by warning:
 </div>
 </div>
 </div>
-<p>This was a challenging assignment, and I still feel that I could’ve done better with more time. I discovered that the chart looks very different when using a linear vs.&nbsp;logarithmic scale, because the website default is logarithmic but the linear model matches mine much closer. I also realized I am not confident in using axis, plot, and legend aspects to polish a graph. However, I did learn how to create a moving graph that tells the story over time, although it did not match the visual perfectly, and this was exciting and helped the graph tell a better story. Emphasizing different aspects of data also draws the eyes and highlights patterns and gives more meaning to the data. I used layering to highlight certain points, as well as ssize adjustments and color contrast.</p>
+<p>This was a challenging assignment, and I still feel that I could’ve done better with more time. I discovered that the chart looks very different when using a linear vs.&nbsp;logarithmic scale, because the website default is logarithmic but the linear model matches mine much closer. I also realized I am not confident in using axis, plot, and legend aspects to polish a graph. However, I did learn how to create a moving graph that tells the story over time, which I ended up deciding to remove, and this was an interesting tool to try out. Emphasizing different aspects of data also draws the eyes and highlights patterns and gives more meaning to the data. I used layering to highlight certain points, as well as size adjustments and color contrast.</p>
 </section>
 
 </main>
