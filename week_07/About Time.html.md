@@ -107,8 +107,8 @@ Warning: A numeric `legend.position` argument in `theme()` was deprecated in ggp
 
 ## Transactions per Company
 
-
 # Transactions per Company
+
 
 ::: {.cell}
 
@@ -128,8 +128,8 @@ ggplot(data = transactions, aes(x = Company, y = Sales, fill = Company)) +
 
 ## Hours of Operation
 
-
 Hours of Operation
+
 
 ::: {.cell}
 
@@ -163,3 +163,7 @@ Warning: Removed 1 row containing missing values or values outside the scale ran
 #scale_x_continuous(breaks = seq(0, 24, 2)) +
 ```
 :::
+
+
+
+I would give a loan to LeBelle. They seemed to perform the best because they have fewer transactions, but more income than the other companies at a higher rate. This tells me that their products are more expensive, but they seem to have a consistent rate of sales over the three months. At the very end of the three month period, they also experienced a sharp increase of sales, reaching over $900 in revenue in just one day. In addition, they seem to have a steady amount of transactions throughout all hours of operation.
