@@ -128,10 +128,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-11"><a href="#cb3-11"></a>  <span class="fu">rename</span>(<span class="st">"Company"</span> <span class="ot">=</span> <span class="st">"Name"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb3-12"><a href="#cb3-12"></a>  <span class="fu">separate</span>(sale_time, <span class="at">into =</span> <span class="fu">c</span>(<span class="st">"date"</span>, <span class="st">"timestamp"</span>), <span class="at">sep =</span> <span class="sc">-</span><span class="dv">8</span>, <span class="at">remove =</span> <span class="cn">FALSE</span>)</span>
 <span id="cb3-13"><a href="#cb3-13"></a>  </span>
-<span id="cb3-14"><a href="#cb3-14"></a></span>
-<span id="cb3-15"><a href="#cb3-15"></a>transactions <span class="ot">&lt;-</span> sales2 <span class="sc">%&gt;%</span> </span>
-<span id="cb3-16"><a href="#cb3-16"></a>  <span class="fu">group_by</span>(Company) <span class="sc">%&gt;%</span> </span>
-<span id="cb3-17"><a href="#cb3-17"></a>  <span class="fu">summarise</span>(<span class="at">Sales =</span> <span class="fu">n</span>())</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-14"><a href="#cb3-14"></a>hourly_sales <span class="ot">&lt;-</span> sales2 <span class="sc">%&gt;%</span> </span>
+<span id="cb3-15"><a href="#cb3-15"></a>  <span class="fu">mutate</span>(<span class="at">hourly =</span> <span class="fu">hour</span>(sale_time))</span>
+<span id="cb3-16"><a href="#cb3-16"></a></span>
+<span id="cb3-17"><a href="#cb3-17"></a>transactions <span class="ot">&lt;-</span> sales2 <span class="sc">%&gt;%</span> </span>
+<span id="cb3-18"><a href="#cb3-18"></a>  <span class="fu">group_by</span>(Company) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-19"><a href="#cb3-19"></a>  <span class="fu">summarise</span>(<span class="at">Sales =</span> <span class="fu">n</span>())</span>
+<span id="cb3-20"><a href="#cb3-20"></a></span>
+<span id="cb3-21"><a href="#cb3-21"></a></span>
+<span id="cb3-22"><a href="#cb3-22"></a><span class="co">#group_by name and date</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="gross-revenue-over-time-per-company" class="level2">
@@ -168,6 +173,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </section>
 <section id="transactions-per-company" class="level2">
 <h2 class="anchored" data-anchor-id="transactions-per-company">Transactions per Company</h2>
+</section>
+<section id="transactions-per-company-1" class="level1">
+<h1>Transactions per Company</h1>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
@@ -185,13 +193,13 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
-</section>
 <section id="hours-of-operation" class="level2">
 <h2 class="anchored" data-anchor-id="hours-of-operation">Hours of Operation</h2>
+<p>Hours of Operation</p>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">ggplot</span>(sales2, <span class="fu">aes</span>(<span class="at">x =</span> timestamp, <span class="at">y =</span> Amount, <span class="at">color =</span> Company, <span class="at">groups =</span> Company)) <span class="sc">+</span></span>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1"></a><span class="fu">ggplot</span>(hourly_sales, <span class="fu">aes</span>(<span class="at">x =</span> hourly, <span class="at">y =</span> Amount, <span class="at">color =</span> Company, <span class="at">groups =</span> Company)) <span class="sc">+</span></span>
 <span id="cb8-2"><a href="#cb8-2"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
 <span id="cb8-3"><a href="#cb8-3"></a>  <span class="fu">labs</span>(<span class="at">title =</span> <span class="st">"Hours of Operation per Company"</span>, </span>
 <span id="cb8-4"><a href="#cb8-4"></a>       <span class="at">x =</span> <span class="st">"Time of Day"</span>,</span>
@@ -217,6 +225,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co">#scale_x_continuous(breaks = seq(0, 24, 2)) +</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
+</section>
 </section>
 
 </main>

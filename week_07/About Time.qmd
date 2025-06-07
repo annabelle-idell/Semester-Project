@@ -25,10 +25,15 @@ sales2 <- sales %>%
   rename("Company" = "Name") %>% 
   separate(sale_time, into = c("date", "timestamp"), sep = -8, remove = FALSE)
   
+hourly_sales <- sales2 %>% 
+  mutate(hourly = hour(sale_time))
 
 transactions <- sales2 %>% 
   group_by(Company) %>% 
   summarise(Sales = n())
+
+
+#group_by name and date
 
 ```
 
@@ -48,6 +53,8 @@ ggplot(data = sales2, aes(x = sale_time, y = Amount, group = Company, color = Co
 
 ## Transactions per Company
 
+
+# Transactions per Company
 ```{r}
 ggplot(data = transactions, aes(x = Company, y = Sales, fill = Company)) + 
   geom_col() +
@@ -60,8 +67,10 @@ ggplot(data = transactions, aes(x = Company, y = Sales, fill = Company)) +
 
 ## Hours of Operation
 
+
+Hours of Operation
 ```{r}
-ggplot(sales2, aes(x = timestamp, y = Amount, color = Company, groups = Company)) +
+ggplot(hourly_sales, aes(x = hourly, y = Amount, color = Company, groups = Company)) +
   geom_point() +
   labs(title = "Hours of Operation per Company", 
        x = "Time of Day",
