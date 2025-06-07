@@ -158,14 +158,15 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   scale_y_continuous(breaks = seq(0, 500, 100),
                      limits = c(0, 500),
                      labels = label_number(suffix = " kg")) +
-  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ",")) +
+  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ","),
+                     trans = "log10") +
   labs(title = "Fruit consumption vs. GDP per capita",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
        x = "GDP per capita (international-$ in 2021 prices)", 
        y = "Fruit supply per person (kilograms per year)",
        caption = "Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data \nNote: GDP per capita is expressed in international-$ at 2021 prices.
 \nOurWorldinData.org/diet-compositions | CC BY") +
-  coord_cartesian(xlim = c(0, 100000)) +
+  coord_cartesian(xlim = c(1000, 100000)) +
   theme_minimal()
 ```
 
@@ -196,14 +197,15 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   scale_y_continuous(breaks = seq(0, 500, 100),
                      limits = c(0, 500),
                      labels = label_number(suffix = " kg")) +
-  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ",")) +
+  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ","),
+                     trans = "log10") +
   labs(title = "Fruit consumption vs. GDP per capita: Kenya, Ghana, United States",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
        x = "GDP per capita (international-$ in 2021 prices)", 
        y = "Fruit supply per person (kilograms per year)",
        caption = "Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data \nNote: GDP per capita is expressed in international-$ at 2021 prices.
 \nOurWorldinData.org/diet-compositions | CC BY") +
-  coord_cartesian(xlim = c(0, 100000)) +
+  coord_cartesian(xlim = c(1000, 100000)) +
   theme_minimal()
 ```
 
@@ -238,14 +240,15 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   scale_y_continuous(breaks = seq(0, 500, 100),
                      limits = c(0, 500),
                      labels = label_number(suffix = " kg")) +
-  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ",")) +
+  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ","),
+                     trans = "log10") +
   labs(title = "Fruit consumption vs. GDP per capita: Oceania",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
        x = "GDP per capita (international-$ in 2021 prices)", 
        y = "Fruit supply per person (kilograms per year)",
        caption = "Data source: Food and Agriculture Organization of the United Nations (2024); Data compiled from multiple sources by World Bank (2025) – Learn more about this data \nNote: GDP per capita is expressed in international-$ at 2021 prices.
 \nOurWorldinData.org/diet-compositions | CC BY") +
-  coord_cartesian(xlim = c(0, 100000)) +
+  coord_cartesian(xlim = c(1000, 100000)) +
   theme_minimal()
 ```
 
