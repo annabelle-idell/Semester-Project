@@ -53,7 +53,6 @@ ggplot(data = sales2, aes(x = sale_time, y = Amount, group = Company, color = Co
 
 ## Transactions per Company
 
-# Transactions per Company
 
 ```{r}
 ggplot(data = transactions, aes(x = Company, y = Sales, fill = Company)) + 
