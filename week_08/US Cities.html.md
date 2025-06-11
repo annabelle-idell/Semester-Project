@@ -159,3 +159,7 @@ give correct results for longitude/latitude data
 
 :::
 :::
+
+
+I chose to use ChatGPT AI to assist me with this assignment by tutoring me on how to create a basic map chart and finding ways to use code when the textbook didnt have examples to guide me. I chose to use this tool because it could give me examples or help when I couldn't find something in the book, and it affected my learning by teaching me how to use new functions I hadn't tried before for a new type of assignment.
+
