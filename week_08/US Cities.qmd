@@ -1,0 +1,67 @@
+---
+title: "US Cities"
+format: 
+  html:
+    code-line-numbers: true
+    code-fold: true
+editor: visual
+execute: 
+  keep-md: true
+  keep-png: true
+warnings: false
+---
+
+```{r}
+library(tidyverse)
+library(sf)
+library(USAboundaries)
+library(ggrepel)
+
+```
+
+```{r}
+idaho <- us_counties(states = "Idaho")
+
+
+US <- us_states() %>% 
+  filter(!state_name %in% c("Puerto Rico", "Alaska", "Hawaii", "District of Columbia"))
+
+US_cities <- us_cities() %>%
+  filter(!state_name %in% c("Puerto Rico", "Alaska", "Hawaii", "District of Columbia")) %>% 
+  select(c(city, state_name, population)) %>% 
+  group_by(state_name) %>% 
+  slice_max(population, n = 3) %>% 
+  arrange(desc(population), .by_group = TRUE) %>% 
+  mutate(rank = c(1, 2, 3))
+
+city_labels <- US_cities %>% 
+  slice_max(population, n = 1)
+
+# assignment: color = rank, names of cities = ggrepel and biggest city labelled
+
+```
+
+
+```{r}
+
+ggplot() + 
+  geom_sf(data = US, fill = NA, color= "gray35") +
+  geom_sf(data = idaho, fill = NA, color = "gray35") +
+  geom_sf(data = US_cities, aes(color = rank, size = population/1000)) +
+  geom_label_repel(data = city_labels, aes(label = city, geometry = geometry),
+                   stat = "sf_coordinates", 
+                   size = 1, 
+                   color = "darkblue",
+                   force = 1,
+                   force_pull = 0.3,
+                   max.overlaps = Inf) +
+  labs(x = NULL,
+       y = NULL,
+       color = NULL,
+       size = "Population (1,000)") +
+  guides(color = "none",
+         size = guide_legend(override.aes = list(color = "darkblue"))) +
+  theme_bw()
+ggsave(filename = "US-Cities-Map.png", width = 15, height = 10)
+
+```
