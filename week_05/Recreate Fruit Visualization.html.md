@@ -127,6 +127,7 @@ dbl (3): Year, fruit__00002919__food_available_for_consumption__0645pc__kilo...
 fruit <- df_fruit %>%
   mutate(Continent = countrycode(Entity, origin = "country.name", destination = "continent")) %>% 
   filter(!is.na(ny_gdp_pcap_pp_kd)) %>%
+  filter(!is.na(Continent)) %>% 
   rename(fruit_supply = `fruit__00002919__food_available_for_consumption__0645pc__kilograms_per_year_per_capita`) %>%
   filter(!is.na(fruit_supply)) %>% 
   filter(Year == 2022)
@@ -154,11 +155,12 @@ Caused by warning:
 
 ```{.r .cell-code}
 ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
-  geom_point(pch = 20) +
+  geom_point() +
   scale_y_continuous(breaks = seq(0, 500, 100),
                      limits = c(0, 500),
                      labels = label_number(suffix = " kg")) +
-  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ","),
+  scale_x_continuous(breaks = c(1000, 2000, 5000, 10000, 20000, 50000, 100000),
+                     labels = dollar_format(prefix = "$", big.mark = ",", accuracy = 1),
                      trans = "log10") +
   labs(title = "Fruit consumption vs. GDP per capita",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
@@ -197,7 +199,8 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   scale_y_continuous(breaks = seq(0, 500, 100),
                      limits = c(0, 500),
                      labels = label_number(suffix = " kg")) +
-  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ","),
+  scale_x_continuous(breaks = c(1000, 2000, 5000, 10000, 20000, 50000, 100000),
+                     labels = dollar_format(prefix = "$", big.mark = ",", accuracy = 1),
                      trans = "log10") +
   labs(title = "Fruit consumption vs. GDP per capita: Kenya, Ghana, United States",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",
@@ -240,7 +243,8 @@ ggplot(fruit, aes(x = ny_gdp_pcap_pp_kd, y = fruit_supply, color = Continent)) +
   scale_y_continuous(breaks = seq(0, 500, 100),
                      limits = c(0, 500),
                      labels = label_number(suffix = " kg")) +
-  scale_x_continuous(labels = dollar_format(prefix = "$", big.mark = ","),
+  scale_x_continuous(breaks = c(1000, 2000, 5000, 10000, 20000, 50000, 100000),
+                     labels = dollar_format(prefix = "$", big.mark = ",", accuracy = 1),
                      trans = "log10") +
   labs(title = "Fruit consumption vs. GDP per capita: Oceania",
        subtitle = "Average per capita fruit supply, measured in kilograms per year versus gross domestic product (GDP) per capita, adjusted \nfor inflation and for differences in living costs between countries.",

@@ -1,0 +1,71 @@
+---
+title: "Idaho Water"
+format: html
+editor: visual
+---
+
+```{r}
+library(sf)
+library(tidyverse)
+
+```
+
+
+```{r}
+wells_path <- tempfile(); uf1 <- tempfile()
+download.file("https://byuistats.github.io/M335/data/Wells.zip", wells_path)
+
+dams_path <- tempfile(); uf2 <- tempfile()
+download.file("https://byuistats.github.io/M335/data/Idaho_Dams.zip", dams_path)
+
+water_path <- tempfile(); uf3 <- tempfile()
+download.file("https://byuistats.github.io/M335/data/water.zip", water_path)
+
+state_shape_path <- tempfile(); uf4 <- tempfile()
+download.file("https://byuistats.github.io/M335/data/shp.zip", state_shape_path)
+
+unzip(wells_path, exdir = uf1)
+wells <- read_sf(uf1)
+
+unzip(dams_path, exdir = uf2)
+dams <- read_sf(uf2)
+
+unzip(water_path, exdir = uf3)
+water <- read_sf(uf3)
+
+unzip(state_shape_path, exdir = uf4)
+state_shape <- read_sf(uf4)
+
+```
+
+
+```{r}
+wells2 <- wells %>% 
+  filter(Production > 5000)
+
+dams2 <- dams %>% 
+  filter(SurfaceAre > 50)
+
+water2 <- water %>% 
+  filter(FEAT_NAME %in% c("Snake River", "Henrys Fork"))
+
+```
+
+
+```{r}
+
+ID_counties <- USAboundaries::us_counties(states = "ID")
+st_crs(ID_counties)
+11:58
+(default_CRS_map <- ggplot() +
+  geom_sf(data = ID_counties) +
+  theme_bw())
+
+#4326
+
+default_CRS_map +
+  coord_sf(crs = st_crs(4326)) 
+
+
+
+```
