@@ -1,7 +1,14 @@
 ---
 title: "Idaho Water"
-format: html
+format: 
+  html:
+    code-line-numbers: true
+    code-fold: true
 editor: visual
+execute: 
+  keep-md: true
+  keep-png: true
+warnings: false
 ---
 
 ```{r}
@@ -9,7 +16,6 @@ library(sf)
 library(tidyverse)
 
 ```
-
 
 ```{r}
 wells_path <- tempfile(); uf1 <- tempfile()
@@ -38,7 +44,6 @@ state_shape <- read_sf(uf4)
 
 ```
 
-
 ```{r}
 wells2 <- wells %>% 
   filter(Production > 5000)
@@ -47,25 +52,50 @@ dams2 <- dams %>%
   filter(SurfaceAre > 50)
 
 water2 <- water %>% 
-  filter(FEAT_NAME %in% c("Snake River", "Henrys Fork"))
+  filter(FEAT_NAME %in% c("Snake River", "Henrys Fork")) %>% 
+  filter(STATE == "IDAH")
 
-```
-
-
-```{r}
+state_shape2 <- state_shape %>% 
+  filter(StateName == "Idaho")
 
 ID_counties <- USAboundaries::us_counties(states = "ID")
 st_crs(ID_counties)
 11:58
-(default_CRS_map <- ggplot() +
-  geom_sf(data = ID_counties) +
-  theme_bw())
+
+```
+
+```{r}
+
+target_crs <- st_crs(4326)
+
+ID_counties  <- st_transform(ID_counties, target_crs)
+wells2       <- st_transform(wells2, target_crs)
+dams2        <- st_transform(dams2, target_crs)
+water2       <- st_transform(water2, target_crs)
+state_shape2  <- st_transform(state_shape2, target_crs)
+
+```
+
+```{r}
+
+default_CRS_map <- ggplot() +
+  geom_sf(data = ID_counties, fill = NA) +
+  geom_sf(data = wells2, color = "skyblue") +
+  geom_sf(data = dams2, color = "tan") +
+  geom_sf(data = water2, color = "blue") +
+  geom_sf(data = state_shape2, fill = NA) +
+  theme_bw()
+
+default_CRS_map +
+  coord_sf(crs = st_crs(4326))
+ggsave(filename = "Idaho Water.png", width = 15, height = 10)
 
 #4326
 
-default_CRS_map +
-  coord_sf(crs = st_crs(4326)) 
-
-
 
 ```
+
+## AI Disclosure
+
+I chose to use ChatGPT AI to assist me with this assignment by troubleshooting the errors for why my code wasn't running. I chose to use this tool because it was customizable to my problem, and it affected my learning by helping me to create an effective graph. I specifically asked to be given next steps rather than a completed version of my code.
+
