@@ -1,0 +1,51 @@
+---
+title: "New"
+format: html
+editor: visual
+---
+
+```{r}
+
+library(tidyverse)
+length(sentences)
+sentences[1:10]
+tibble(sentence = sentences[1:4]) %>% 
+  mutate(count = str_count(sentence, "(t|T)he "))
+  mutate(count = str_count(sentence, "[tT]he "))
+  mutate(count = str_count(str_to_lower(sentence), "the "))
+  mutate(count = str_count(str_to_lower(sentence), "the(?![:alpha:])"))
+  
+  
+
+```
+
+
+```{r}
+
+dat <- readr::read_lines("https://byuistats.github.io/M335/data/randomletters.txt")
+
+length(dat)
+str_length(dat)
+
+#remove all the a and e and see how long the string is
+dat %>% 
+  str_remove_all(pattern = "[ae]") %>% str_length()
+
+#how many times is "jim" in the string?
+dat %>% str_count(pattern = "jim")
+
+#find sequences of 3 of the same letters in a row
+dat %>% str_extract_all(pattern = "([:alpha:][:alpha:][:alpha:])")
+## OR
+dat %>% str_extract_all(pattern = "([:alpha:]\\1\\1)")
+
+#split the vector so that each item is its own element
+dat %>% str_split(pattern = "") %>% unlist() %>% str_c(collapse = "")
+
+seq(0, 100, 10)
+month.abb
+letters
+
+
+
+```

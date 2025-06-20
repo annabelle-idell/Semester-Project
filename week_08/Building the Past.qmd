@@ -1,0 +1,92 @@
+---
+title: "Building the Past"
+format: 
+  html:
+    code-line-numbers: true
+    code-fold: true
+editor: visual
+execute: 
+  keep-md: true
+  keep-png: true
+warnings: false
+---
+
+```{r}
+library(tidyverse)
+library(USAboundaries)
+library(sf)
+library(buildings)
+library(geofacet)
+
+states <- us_states() %>% 
+  mutate(statefp = as.numeric(statefp))
+
+single_family <- permits %>% 
+  filter(variable == "Single Family") %>% 
+  rename(statefp = state) %>% 
+  left_join(states, join_by(statefp))
+
+
+ORcounties <- us_counties(states = "Oregon") %>% 
+  { .[, -13] } %>% 
+  mutate(statefp = as.numeric(statefp)) %>% 
+  mutate(county = as.numeric(countyfp))
+
+ORpermits <- permits %>% 
+  filter(StateAbbr == "OR") %>% 
+  filter(variable == "Single Family") %>% 
+  left_join(ORcounties, join_by(county)) %>% 
+  mutate(name = recode(name,
+                       "Hood River" = "HoodRiver"))
+
+```
+
+
+## Single Family Permits across the US
+
+```{r}
+
+ggplot(single_family, aes(x = year, y = value)) +
+  geom_line() +
+  facet_geo(facets = ~state_name, grid = us_state_grid1, label = NULL, scales = "free_y") +
+  labs(x = "Year (1980 - 2010)",
+       y = "Number of Single Family of Permits") + 
+  scale_x_continuous(labels = NULL) +
+  scale_y_continuous(labels = NULL) +
+  theme_minimal()
+
+
+```
+
+
+## Single Family Permits across Oregon Counties
+
+```{r}
+
+ggplot(ORpermits, aes(x = year, y = value)) +
+  geom_line() +
+  facet_geo(facets = ~name,
+            grid = us_or_counties_grid1,
+            label = NULL,
+            scale = "free_y") +
+  scale_x_continuous(labels = NULL) +
+  scale_y_continuous(labels = NULL) +
+    labs(x = "Year (1980 - 2010",
+         y = "Number of Single Family Permits") +
+    theme_minimal()
+  
+
+```
+
+
+## Conclusion
+
+Regardless of scale, each state experiences a drop in single family permits in the most recent years, mimicking the mortgage crisis around 2007-2010. Some states are smaller than others and have less noticeable changes over time, so the scale was adjusted to demonstrate that each state, whether heavily populated or not, experienced a significant decrease in permits. Each state was affected by the market crash. 
+
+In Oregon, single family permits on a county level followed the same pattern. Each county that was still organized in the most recent decade experienced a decline in permits between 2007 - 2010 compared to the level they were at previously. Once again, the scale was adjusted to compensate for smaller county population levels and make comparison possible against larger counties.
+
+I chose to eliminate axis labels to reduce clutter and encourage a focus on the pattern followed by each state and each county in recent years. Regardless of the level of single family permits for each state and county previous to 2007, it is easier to see that the rate declined even further during the recent years.
+
+## AI Disclosure
+
+I chose to use ChatGPT AI to assist me with this assignment by asking it how to effectively use certain functions and what certain errors were trying to tell me. I chose to use this tool because it was quick and could give answers specific to my coding needs, and it affected my learning by helping me to learn how to use geofacet and decide if I was going to make further changes to my graph (which I eventually decided to abandon because it was too difficult).
