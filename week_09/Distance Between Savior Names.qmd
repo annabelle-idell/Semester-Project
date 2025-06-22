@@ -1,0 +1,18 @@
+---
+title: "Distance between Savior Names"
+format: html
+editor: visual
+---
+
+
+```{r}
+
+month.name
+library(tidyverse)
+
+sentences[1:4]
+
+the_months <- str_c(month.name, collapse = "|")
+str_subset(sentences, pattern = the_months)
+
+```
