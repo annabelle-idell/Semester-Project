@@ -4,13 +4,11 @@ format: html
 editor: visual
 ---
 
-
 ```{r}
 library(tidyverse)
 library(stringi)
 
 ```
-
 
 ```{r}
 randomletters <- read_lines("https://byuistats.github.io/M335/data/randomletters.txt")
@@ -19,8 +17,8 @@ randomletnums <- readr::read_lines("https://byuistats.github.io/M335/data/random
 
 ```
 
-
 ## Hidden Quote
+
 ```{r}
 
 letters_quote <- str_c(randomletters, collapse = "") %>% 
@@ -30,12 +28,20 @@ letters_quote <- str_c(randomletters, collapse = "") %>%
 
 letters_quote
 
-# the plural of anecdote is not data.
+# the plural of anecdote is not data.'
+
+letters_split <- str_split(randomletters, pattern = "")[[1]]
+my_seq <- seq(from = 0, to = length(letters_split), by = 1700)
+
+my_seq[1] <- 1
+
+letters_split[my_seq]
+
 
 ```
 
-
 ## Secret Message
+
 ```{r}
 numbers <- str_extract_all(randomletnums, "\\d+") %>% unlist() %>% as.numeric()
 
@@ -47,8 +53,8 @@ code
 
 ```
 
-
 ## Longest Sequence of Vowels
+
 ```{r}
 vowels <- str_extract_all(randomletters, "[aeiou]{7,}")
 
@@ -59,4 +65,3 @@ vowels
 # oaaoooo
 
 ```
-

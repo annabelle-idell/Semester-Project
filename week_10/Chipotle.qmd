@@ -1,0 +1,42 @@
+---
+title: "Chipotle"
+format: html
+editor: visual
+---
+
+```{r}
+## Class Notes
+
+word_count <- function(){
+
+scriptures2 <- scriptures %>% 
+  filter(volume_short_title %in% volumes) %>% 
+  group_by(volume_short_title) %>% 
+  summarise(total = sum(str_count(scripture_text, "love")))
+}
+  
+word_count(the_word = "[Ll]ove")
+
+
+
+word_count2 <- function(the_word, volumes = c("NT", "BoM")){
+
+scriptures2 <- scriptures %>% 
+  filter(volume_short_title %in% volumes) %>% 
+  group_by(volume_short_title) %>% 
+  summarise(total = sum(str_count(scripture_text, the_word)))
+}
+  
+word_count2(the_word = "[Ll]ove", volumes = c("NT", "BoM"))
+
+
+word_count3 <- function(the_word, volumes = c("NT", "BoM"), my_groups){
+  
+  scriptures %>% 
+    filter(volume_short_title %in% volumes) %>% 
+    group_by({{my_groups}}) %>% 
+    summarise(total = sum(str_count(scripture_text, the_word)))
+}
+
+word_count3(the_word = "[Ll]ove", my_groups = volume_short_title)
+```

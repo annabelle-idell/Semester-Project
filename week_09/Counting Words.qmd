@@ -1,0 +1,67 @@
+---
+title: "Counting Words"
+format: 
+  html:
+    code-line-numbers: true
+    code-fold: true
+editor: visual
+warnings: false
+execute: 
+  keep-md: true 
+---
+
+
+```{r}
+library(tidyverse)
+library(stringi)
+
+```
+
+
+```{r}
+scriptures <- read_csv("https://github.com/beandog/lds-scriptures/raw/master/csv/lds-scriptures.csv")
+
+```
+
+## Average Verse Length
+```{r}
+
+verses <- scriptures %>% 
+  filter(volume_short_title %in% c("NT", "BoM")) %>% 
+  group_by(volume_short_title) %>% 
+  summarise(average_words = mean(str_count(scripture_text, boundary("word"))))
+
+verses
+
+```
+
+## Count of the Savior's Name
+```{r}
+
+scriptures2 <- scriptures %>% 
+  filter(volume_short_title %in% c("NT", "BoM")) %>% 
+  group_by(volume_short_title) %>% 
+  summarise(name_count = sum(str_count(scripture_text, "Jesus")))
+
+scriptures2
+
+```
+
+## Word Count by Verse for BoM Books
+```{r}
+
+versecount <- scriptures %>% 
+  filter(volume_short_title == "BoM") %>% 
+  group_by(book_title, scripture_text) %>% 
+  summarise(words_per_verse = sum(str_count(scripture_text, boundary("word"))))
+
+ggplot(versecount, aes(x = factor(book_title, levels = c("1 Nephi", "2 Nephi", "Jacob", "Enos", "Jarom", "Omni", "Words of Mormon", "Mosiah", "Alma", "Helaman", "3 Nephi", "4 Nephi", "Mormon", "Ether", "Moroni")), y = words_per_verse)) +
+  geom_boxplot() +
+  coord_flip() +
+  theme_bw()
+  
+```
+
+
+
+
