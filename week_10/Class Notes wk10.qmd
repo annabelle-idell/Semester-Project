@@ -1,0 +1,39 @@
+---
+title: "Class"
+format: html
+editor: visual
+---
+
+
+```{r}
+library(tidyverse)
+View(starwars)
+
+starwars2 <- starwars %>% unnest(films) %>% 
+  group_by(name) %>% 
+  summarise(n())
+
+## map_*(input_column, function)
+
+starwars3 <- starwars %>%
+  mutate(film_count = map(films, length)) %>% 
+  relocate(film_count)
+
+starwars3[[1, 1]]
+#first item in the column, first column
+starwars3 %>% pluck(1,3)
+# first column, 3rd item in column
+
+starwars3 %>% unnest(film_count)
+
+# combining vehicles and starships into one column:
+
+starwars %>% mutate(driven = map2(vehicles, starships, c)) %>% relocate(driven)
+
+```
+
+
+```{r}
+
+```
+

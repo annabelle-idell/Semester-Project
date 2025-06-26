@@ -1,18 +1,58 @@
 ---
 title: "Distance between Savior Names"
-format: html
+format: 
+  html:
+    code-fold: true
+    code-line-numbers: true
 editor: visual
+execute: 
+  keep-md: true
+warnings: false
 ---
 
 
 ```{r}
-
-month.name
 library(tidyverse)
+library(stringi)
 
-sentences[1:4]
+scriptures <- read_csv("https://github.com/beandog/lds-scriptures/raw/master/csv/lds-scriptures.csv")
 
-the_months <- str_c(month.name, collapse = "|")
-str_subset(sentences, pattern = the_months)
+savior_names <- read_rds("https://byuistats.github.io/M335/data/BoM_SaviorNames.rds")
 
 ```
+
+
+```{r}
+scriptures2 <- scriptures %>% 
+  filter(volume_short_title == "BoM")
+  
+the_names <- str_c(savior_names$name, collapse = "|")
+
+the_text <- str_split(scriptures2$scripture_text, pattern = the_names)
+
+the_text2 <- tibble(value = unlist(the_text))
+
+names_data <- the_text2%>% 
+  group_by(value) %>% 
+  summarise(number_words = sum(str_count(value, boundary("word")))) %>% 
+  filter(number_words != "0")
+
+names_mean <- names_data %>%
+  summarise(mean = mean(number_words))
+  
+```
+
+
+```{r}
+ggplot(data = names_data, aes(x = value, y = number_words)) +
+  geom_point() +
+  geom_hline(yintercept = names_mean$mean, color = "red") +
+  scale_x_discrete(labels = NULL) +
+  theme_classic()
+
+```
+
+
+## AI Disclosure
+
+I chose to use ChatGPT AI to assist me with this assignment by tutoring me on how to use the functions and troubleshooting my code. I chose to use this tool because I was stuck on how to continue and I wasn't feeling very confident with the necessary functions. It affected my learning by correcting some of my functions and syntax, but overall it wasn't very helpful, and it wasn't able to clarify some of the things I was confused about.
