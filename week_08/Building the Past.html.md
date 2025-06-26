@@ -98,18 +98,17 @@ ORpermits <- permits %>%
 :::
 
 
-
 ## Single Family Permits across the US
 
 
 ::: {.cell}
 
 ```{.r .cell-code}
-ggplot(single_family, aes(x = year, y = value)) +
+ggplot(single_family, aes(x = year, y = value, group = county)) +
   geom_line() +
   facet_geo(facets = ~state_name, grid = us_state_grid1, label = NULL, scales = "free_y") +
   labs(x = "Year (1980 - 2010)",
-       y = "Number of Single Family of Permits") + 
+       y = "Number of Single Family of Permits \n(Scaled to Account for Population)") + 
   scale_x_continuous(labels = NULL) +
   scale_y_continuous(labels = NULL) +
   theme_minimal()
@@ -118,8 +117,11 @@ ggplot(single_family, aes(x = year, y = value)) +
 ::: {.cell-output-display}
 ![](Building-the-Past_files/figure-html/unnamed-chunk-2-1.png){width=672}
 :::
-:::
 
+```{.r .cell-code}
+# maybe group by county in aes to create the right geom_line
+```
+:::
 
 
 ## Single Family Permits across Oregon Counties
@@ -137,7 +139,7 @@ ggplot(ORpermits, aes(x = year, y = value)) +
   scale_x_continuous(labels = NULL) +
   scale_y_continuous(labels = NULL) +
     labs(x = "Year (1980 - 2010",
-         y = "Number of Single Family Permits") +
+         y = "Number of Single Family Permits \n(Scaled to Account for Population)") +
     theme_minimal()
 ```
 
@@ -147,10 +149,9 @@ ggplot(ORpermits, aes(x = year, y = value)) +
 :::
 
 
-
 ## Conclusion
 
-Regardless of scale, each state experiences a drop in single family permits in the most recent years, mimicking the mortgage crisis around 2007-2010. Some states are smaller than others and have less noticeable changes over time, so the scale was adjusted to demonstrate that each state, whether heavily populated or not, experienced a significant decrease in permits. Each state was affected by the market crash. 
+Regardless of scale, each state experiences a drop in single family permits in the most recent years, mimicking the mortgage crisis around 2007-2010. Some states are smaller than others and have less noticeable changes over time, so the scale was adjusted to demonstrate that each state, whether heavily populated or not, experienced a significant decrease in permits. Each state was affected by the market crash.
 
 In Oregon, single family permits on a county level followed the same pattern. Each county that was still organized in the most recent decade experienced a decline in permits between 2007 - 2010 compared to the level they were at previously. Once again, the scale was adjusted to compensate for smaller county population levels and make comparison possible against larger counties.
 

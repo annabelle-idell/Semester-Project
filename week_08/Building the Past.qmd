@@ -45,11 +45,11 @@ ORpermits <- permits %>%
 
 ```{r}
 
-ggplot(single_family, aes(x = year, y = value)) +
+ggplot(single_family, aes(x = year, y = value, group = county)) +
   geom_line() +
   facet_geo(facets = ~state_name, grid = us_state_grid1, label = NULL, scales = "free_y") +
   labs(x = "Year (1980 - 2010)",
-       y = "Number of Single Family of Permits") + 
+       y = "Number of Single Family of Permits \n(Scaled to Account for Population)") + 
   scale_x_continuous(labels = NULL) +
   scale_y_continuous(labels = NULL) +
   theme_minimal()
@@ -71,7 +71,7 @@ ggplot(ORpermits, aes(x = year, y = value)) +
   scale_x_continuous(labels = NULL) +
   scale_y_continuous(labels = NULL) +
     labs(x = "Year (1980 - 2010",
-         y = "Number of Single Family Permits") +
+         y = "Number of Single Family Permits \n(Scaled to Account for Population)") +
     theme_minimal()
   
 
