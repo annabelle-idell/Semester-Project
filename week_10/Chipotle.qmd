@@ -1,42 +1,68 @@
 ---
 title: "Chipotle"
-format: html
+format: 
+  html:
+    code-line-numbers: true
+    code-fold: true
 editor: visual
+execute: 
+  keep-md: true
+warnings: false
 ---
 
+
 ```{r}
-## Class Notes
+library(tidyverse)
+library(stringi)
 
-word_count <- function(){
-
-scriptures2 <- scriptures %>% 
-  filter(volume_short_title %in% volumes) %>% 
-  group_by(volume_short_title) %>% 
-  summarise(total = sum(str_count(scripture_text, "love")))
-}
-  
-word_count(the_word = "[Ll]ove")
-
-
-
-word_count2 <- function(the_word, volumes = c("NT", "BoM")){
-
-scriptures2 <- scriptures %>% 
-  filter(volume_short_title %in% volumes) %>% 
-  group_by(volume_short_title) %>% 
-  summarise(total = sum(str_count(scripture_text, the_word)))
-}
-  
-word_count2(the_word = "[Ll]ove", volumes = c("NT", "BoM"))
-
-
-word_count3 <- function(the_word, volumes = c("NT", "BoM"), my_groups){
-  
-  scriptures %>% 
-    filter(volume_short_title %in% volumes) %>% 
-    group_by({{my_groups}}) %>% 
-    summarise(total = sum(str_count(scripture_text, the_word)))
-}
-
-word_count3(the_word = "[Ll]ove", my_groups = volume_short_title)
 ```
+
+
+```{r}
+mystring <- list('{"Monday":94,"Tuesday":76,"Wednesday":89,"Thursday":106,"Friday":130,"Saturday":128,"Sunday":58}')
+
+weekday <- str_extract_all(mystring, "[:alpha:]+") %>% unlist()
+
+customers <- str_extract_all(mystring, "\\d+") %>% unlist()
+
+mytibble <- tibble(weekday, customers)
+
+
+## Functions
+
+chipotle <- function(x) {
+  weekday <- str_extract_all(x, "[:alpha:]+") %>% unlist()
+  customers <- str_extract_all(x, "\\d+") %>% unlist() %>% as.numeric()
+  tibble(weekday, customers) %>% arrange(desc(customers))
+}
+
+chipotle_day <- function(x) {
+  chipotle(x) %>% slice_max(customers, n = 1)
+}
+
+```
+
+
+## Test 1
+```{r}
+chipotle('{“Monday”:94,“Tuesday”:76,“Wednesday”:89,“Thursday”:106,“Friday”:130,“Saturday”:128,“Sunday”:58}')
+
+chipotle_day('{"Monday":94,"Tuesday":76,"Wednesday":89,"Thursday":106,"Friday":130,"Saturday":128,"Sunday":58}')
+```
+
+
+## Test 2
+```{r}
+chipotle('{“Monday”:18,“Tuesday”:16,“Wednesday”:14,“Thursday”:27,“Friday”:26,“Saturday”:36,“Sunday”:20}')
+
+chipotle_day('{“Monday”:18,“Tuesday”:16,“Wednesday”:14,“Thursday”:27,“Friday”:26,“Saturday”:36,“Sunday”:20}')
+```
+
+
+## Test 3
+```{r}
+chipotle('{“Monday”:0,“Tuesday”:0,“Wednesday”:1,“Thursday”:0,“Friday”:0,“Saturday”:1,“Sunday”:0}')
+
+chipotle_day('{“Monday”:0,“Tuesday”:0,“Wednesday”:1,“Thursday”:0,“Friday”:0,“Saturday”:1,“Sunday”:0}')
+```
+
