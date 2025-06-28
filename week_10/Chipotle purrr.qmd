@@ -1,0 +1,49 @@
+---
+title: "Chipotle purrr"
+format: 
+  html:
+    code-fold: true
+    code-line-numbers: true
+editor: visual
+execute: 
+  keep-md: true
+warnings: false
+---
+
+```{r}
+library(tidyverse)
+library(stringi)
+```
+
+
+```{r}
+data_chipotle <- read_csv("https://byuistats.github.io/M335/data/chipotle_reduced.csv")
+```
+
+
+```{r}
+# Previous Functions
+
+chipotle <- function(x) {
+  weekday <- str_extract_all(x, "[:alpha:]+") %>% unlist()
+  customers <- str_extract_all(x, "\\d+") %>% unlist() %>% as.numeric()
+  tibble(weekday, customers) %>% arrange(desc(customers))
+}
+
+chipotle_day <- function(x) {
+  chipotle(x) %>% slice_max(customers, n = 1)
+}
+
+
+data_chipotle <- data_chipotle %>% filter(!is.na(popularity_by_day)) %>%
+  select(popularity_by_day)
+
+promotion_day <- data_chipotle %>% 
+  mutate(popularity = map(popularity_by_day, chipotle_day)) %>%
+  unnest(popularity)
+  
+  
+print(promotion_day)
+
+```
+

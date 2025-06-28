@@ -10,7 +10,6 @@ execute:
 warnings: false
 ---
 
-
 ```{r}
 library(tidyverse)
 library(stringi)
@@ -21,14 +20,18 @@ savior_names <- read_rds("https://byuistats.github.io/M335/data/BoM_SaviorNames.
 
 ```
 
-
 ```{r}
-scriptures2 <- scriptures %>% 
+scriptures <- scriptures %>% 
   filter(volume_short_title == "BoM")
-  
+
 the_names <- str_c(savior_names$name, collapse = "|")
 
-the_text <- str_split(scriptures2$scripture_text, pattern = the_names)
+scriptures2 <- str_c(scriptures$scripture_text) %>% 
+  str_flatten() %>% str_split(pattern = the_names) %>% 
+  sum(str_count(boundary("word")))
+
+
+
 
 the_text2 <- tibble(value = unlist(the_text))
 
@@ -42,7 +45,6 @@ names_mean <- names_data %>%
   
 ```
 
-
 ```{r}
 ggplot(data = names_data, aes(x = value, y = number_words)) +
   geom_point() +
@@ -51,7 +53,6 @@ ggplot(data = names_data, aes(x = value, y = number_words)) +
   theme_classic()
 
 ```
-
 
 ## AI Disclosure
 

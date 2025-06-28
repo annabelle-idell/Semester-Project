@@ -37,7 +37,8 @@ chipotle <- function(x) {
 }
 
 chipotle_day <- function(x) {
-  chipotle(x) %>% slice_max(customers, n = 1)
+  chipotle(x) %>% slice_max(customers, n = 1) %>% 
+  pull(weekday) %>% str_c()
 }
 
 ```

@@ -139,8 +139,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-16"><a href="#cb4-16"></a>}</span>
 <span id="cb4-17"><a href="#cb4-17"></a></span>
 <span id="cb4-18"><a href="#cb4-18"></a>chipotle_day <span class="ot">&lt;-</span> <span class="cf">function</span>(x) {</span>
-<span id="cb4-19"><a href="#cb4-19"></a>  <span class="fu">chipotle</span>(x) <span class="sc">%&gt;%</span> <span class="fu">slice_max</span>(customers, <span class="at">n =</span> <span class="dv">1</span>)</span>
-<span id="cb4-20"><a href="#cb4-20"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb4-19"><a href="#cb4-19"></a>  <span class="fu">chipotle</span>(x) <span class="sc">%&gt;%</span> <span class="fu">slice_max</span>(customers, <span class="at">n =</span> <span class="dv">1</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb4-20"><a href="#cb4-20"></a>  <span class="fu">pull</span>(weekday) <span class="sc">%&gt;%</span> <span class="fu">str_c</span>()</span>
+<span id="cb4-21"><a href="#cb4-21"></a>}</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="test-1" class="level2">
@@ -167,10 +168,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">chipotle_day</span>(<span class="st">'{"Monday":94,"Tuesday":76,"Wednesday":89,"Thursday":106,"Friday":130,"Saturday":128,"Sunday":58}'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 2
-  weekday customers
-  &lt;chr&gt;       &lt;dbl&gt;
-1 Friday        130</code></pre>
+<pre><code>[1] "Friday"</code></pre>
 </div>
 </div>
 </section>
@@ -198,10 +196,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">chipotle_day</span>(<span class="st">'{“Monday”:18,“Tuesday”:16,“Wednesday”:14,“Thursday”:27,“Friday”:26,“Saturday”:36,“Sunday”:20}'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 1 × 2
-  weekday  customers
-  &lt;chr&gt;        &lt;dbl&gt;
-1 Saturday        36</code></pre>
+<pre><code>[1] "Saturday"</code></pre>
 </div>
 </div>
 </section>
@@ -229,11 +224,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="sourceCode cell-code" id="cb15"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1"></a><span class="fu">chipotle_day</span>(<span class="st">'{“Monday”:0,“Tuesday”:0,“Wednesday”:1,“Thursday”:0,“Friday”:0,“Saturday”:1,“Sunday”:0}'</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stdout">
-<pre><code># A tibble: 2 × 2
-  weekday   customers
-  &lt;chr&gt;         &lt;dbl&gt;
-1 Wednesday         1
-2 Saturday          1</code></pre>
+<pre><code>[1] "Wednesday" "Saturday" </code></pre>
 </div>
 </div>
 </section>
