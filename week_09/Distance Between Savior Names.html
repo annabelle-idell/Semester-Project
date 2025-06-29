@@ -116,8 +116,9 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a><span class="fu">library</span>(stringi)</span>
-<span id="cb3-2"><a href="#cb3-2"></a></span>
-<span id="cb3-3"><a href="#cb3-3"></a>scriptures <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/beandog/lds-scriptures/raw/master/csv/lds-scriptures.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb3-2"><a href="#cb3-2"></a><span class="fu">library</span>(beeswarm)</span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a>scriptures <span class="ot">&lt;-</span> <span class="fu">read_csv</span>(<span class="st">"https://github.com/beandog/lds-scriptures/raw/master/csv/lds-scriptures.csv"</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
 <pre><code>Rows: 41995 Columns: 19
@@ -137,33 +138,35 @@ dbl  (6): volume_id, book_id, chapter_id, verse_id, chapter_number, verse_nu...
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>scriptures2 <span class="ot">&lt;-</span> scriptures <span class="sc">%&gt;%</span> </span>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1"></a>scriptures <span class="ot">&lt;-</span> scriptures <span class="sc">%&gt;%</span> </span>
 <span id="cb6-2"><a href="#cb6-2"></a>  <span class="fu">filter</span>(volume_short_title <span class="sc">==</span> <span class="st">"BoM"</span>)</span>
-<span id="cb6-3"><a href="#cb6-3"></a>  </span>
+<span id="cb6-3"><a href="#cb6-3"></a></span>
 <span id="cb6-4"><a href="#cb6-4"></a>the_names <span class="ot">&lt;-</span> <span class="fu">str_c</span>(savior_names<span class="sc">$</span>name, <span class="at">collapse =</span> <span class="st">"|"</span>)</span>
 <span id="cb6-5"><a href="#cb6-5"></a></span>
-<span id="cb6-6"><a href="#cb6-6"></a>the_text <span class="ot">&lt;-</span> <span class="fu">str_split</span>(scriptures2<span class="sc">$</span>scripture_text, <span class="at">pattern =</span> the_names)</span>
-<span id="cb6-7"><a href="#cb6-7"></a></span>
-<span id="cb6-8"><a href="#cb6-8"></a>the_text2 <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">value =</span> <span class="fu">unlist</span>(the_text))</span>
-<span id="cb6-9"><a href="#cb6-9"></a></span>
-<span id="cb6-10"><a href="#cb6-10"></a>names_data <span class="ot">&lt;-</span> the_text2<span class="sc">%&gt;%</span> </span>
-<span id="cb6-11"><a href="#cb6-11"></a>  <span class="fu">group_by</span>(value) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-12"><a href="#cb6-12"></a>  <span class="fu">summarise</span>(<span class="at">number_words =</span> <span class="fu">sum</span>(<span class="fu">str_count</span>(value, <span class="fu">boundary</span>(<span class="st">"word"</span>)))) <span class="sc">%&gt;%</span> </span>
-<span id="cb6-13"><a href="#cb6-13"></a>  <span class="fu">filter</span>(number_words <span class="sc">!=</span> <span class="st">"0"</span>)</span>
-<span id="cb6-14"><a href="#cb6-14"></a></span>
-<span id="cb6-15"><a href="#cb6-15"></a>names_mean <span class="ot">&lt;-</span> names_data <span class="sc">%&gt;%</span></span>
-<span id="cb6-16"><a href="#cb6-16"></a>  <span class="fu">summarise</span>(<span class="at">mean =</span> <span class="fu">mean</span>(number_words))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb6-6"><a href="#cb6-6"></a>scriptures2 <span class="ot">&lt;-</span> <span class="fu">str_c</span>(scriptures<span class="sc">$</span>scripture_text) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-7"><a href="#cb6-7"></a>  <span class="fu">str_flatten</span>() <span class="sc">%&gt;%</span> <span class="fu">str_split</span>(<span class="at">pattern =</span> the_names)</span>
+<span id="cb6-8"><a href="#cb6-8"></a></span>
+<span id="cb6-9"><a href="#cb6-9"></a>word_count <span class="ot">&lt;-</span> <span class="fu">unlist</span>(scriptures2) <span class="sc">%&gt;%</span> <span class="fu">str_count</span>(<span class="at">pattern =</span> <span class="st">"</span><span class="sc">\\</span><span class="st">S+"</span>) </span>
+<span id="cb6-10"><a href="#cb6-10"></a></span>
+<span id="cb6-11"><a href="#cb6-11"></a>mean_count <span class="ot">&lt;-</span> <span class="fu">mean</span>(word_count)</span>
+<span id="cb6-12"><a href="#cb6-12"></a><span class="co"># 63.2</span></span>
+<span id="cb6-13"><a href="#cb6-13"></a></span>
+<span id="cb6-14"><a href="#cb6-14"></a>word_tibble <span class="ot">&lt;-</span> <span class="fu">tibble</span>(word_count) <span class="sc">%&gt;%</span> </span>
+<span id="cb6-15"><a href="#cb6-15"></a>  <span class="fu">filter</span>(word_count <span class="sc">&gt;=</span> <span class="dv">0</span>)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> names_data, <span class="fu">aes</span>(<span class="at">x =</span> value, <span class="at">y =</span> number_words)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">geom_point</span>() <span class="sc">+</span></span>
-<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">geom_hline</span>(<span class="at">yintercept =</span> names_mean<span class="sc">$</span>mean, <span class="at">color =</span> <span class="st">"red"</span>) <span class="sc">+</span></span>
-<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">scale_x_discrete</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb7-5"><a href="#cb7-5"></a>  <span class="fu">theme_classic</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">ggplot</span>(<span class="at">data =</span> word_tibble, <span class="fu">aes</span>(word_count)) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">geom_freqpoly</span>() <span class="sc">+</span></span>
+<span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">geom_vline</span>(<span class="at">xintercept =</span> mean_count, <span class="at">color =</span> <span class="st">"red"</span>, <span class="at">lty =</span> <span class="dv">2</span>) <span class="sc">+</span></span>
+<span id="cb7-4"><a href="#cb7-4"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">trans =</span> <span class="st">"sqrt"</span>) <span class="sc">+</span></span>
+<span id="cb7-5"><a href="#cb7-5"></a>  <span class="fu">theme_bw</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
+</div>
 <div class="cell-output-display">
 <div>
 <figure class="figure">

@@ -37,6 +37,7 @@ library(tidyverse)
 
 ```{.r .cell-code}
 library(stringi)
+library(beeswarm)
 
 scriptures <- read_csv("https://github.com/beandog/lds-scriptures/raw/master/csv/lds-scriptures.csv")
 ```
@@ -65,40 +66,47 @@ savior_names <- read_rds("https://byuistats.github.io/M335/data/BoM_SaviorNames.
 ::: {.cell}
 
 ```{.r .cell-code}
-scriptures2 <- scriptures %>% 
+scriptures <- scriptures %>% 
   filter(volume_short_title == "BoM")
-  
+
 the_names <- str_c(savior_names$name, collapse = "|")
 
-the_text <- str_split(scriptures2$scripture_text, pattern = the_names)
+scriptures2 <- str_c(scriptures$scripture_text) %>% 
+  str_flatten() %>% str_split(pattern = the_names)
 
-the_text2 <- tibble(value = unlist(the_text))
+word_count <- unlist(scriptures2) %>% str_count(pattern = "\\S+") 
 
-names_data <- the_text2%>% 
-  group_by(value) %>% 
-  summarise(number_words = sum(str_count(value, boundary("word")))) %>% 
-  filter(number_words != "0")
+mean_count <- mean(word_count)
+# 63.2
 
-names_mean <- names_data %>%
-  summarise(mean = mean(number_words))
+word_tibble <- tibble(word_count) %>% 
+  filter(word_count >= 0)
 ```
 :::
 
 ::: {.cell}
 
 ```{.r .cell-code}
-ggplot(data = names_data, aes(x = value, y = number_words)) +
-  geom_point() +
-  geom_hline(yintercept = names_mean$mean, color = "red") +
-  scale_x_discrete(labels = NULL) +
-  theme_classic()
+ggplot(data = word_tibble, aes(word_count)) +
+  geom_freqpoly() +
+  geom_vline(xintercept = mean_count, color = "red", lty = 2) +
+  scale_x_continuous(trans = "sqrt") +
+  theme_bw()
 ```
+
+::: {.cell-output .cell-output-stderr}
+
+```
+`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+```
+
+
+:::
 
 ::: {.cell-output-display}
 ![](Distance-Between-Savior-Names_files/figure-html/unnamed-chunk-3-1.png){width=672}
 :::
 :::
-
 
 
 ## AI Disclosure

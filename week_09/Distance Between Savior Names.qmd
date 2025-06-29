@@ -13,6 +13,7 @@ warnings: false
 ```{r}
 library(tidyverse)
 library(stringi)
+library(beeswarm)
 
 scriptures <- read_csv("https://github.com/beandog/lds-scriptures/raw/master/csv/lds-scriptures.csv")
 
@@ -27,30 +28,25 @@ scriptures <- scriptures %>%
 the_names <- str_c(savior_names$name, collapse = "|")
 
 scriptures2 <- str_c(scriptures$scripture_text) %>% 
-  str_flatten() %>% str_split(pattern = the_names) %>% 
-  sum(str_count(boundary("word")))
+  str_flatten() %>% str_split(pattern = the_names)
 
+word_count <- unlist(scriptures2) %>% str_count(pattern = "\\S+") 
 
+mean_count <- mean(word_count)
+# 63.2
 
+word_tibble <- tibble(word_count) %>% 
+  filter(word_count >= 0)
 
-the_text2 <- tibble(value = unlist(the_text))
-
-names_data <- the_text2%>% 
-  group_by(value) %>% 
-  summarise(number_words = sum(str_count(value, boundary("word")))) %>% 
-  filter(number_words != "0")
-
-names_mean <- names_data %>%
-  summarise(mean = mean(number_words))
-  
 ```
 
 ```{r}
-ggplot(data = names_data, aes(x = value, y = number_words)) +
-  geom_point() +
-  geom_hline(yintercept = names_mean$mean, color = "red") +
-  scale_x_discrete(labels = NULL) +
-  theme_classic()
+
+ggplot(data = word_tibble, aes(word_count)) +
+  geom_freqpoly() +
+  geom_vline(xintercept = mean_count, color = "red", lty = 2) +
+  scale_x_continuous(trans = "sqrt") +
+  theme_bw()
 
 ```
 
