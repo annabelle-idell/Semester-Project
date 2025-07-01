@@ -24,7 +24,9 @@ states <- us_states() %>%
 single_family <- permits %>% 
   filter(variable == "Single Family") %>% 
   rename(statefp = state) %>% 
-  left_join(states, join_by(statefp))
+  left_join(states, join_by(statefp)) %>% 
+  group_by(state_name, year) %>% 
+  summarise(state_permits = sum(value))
 
 
 ORcounties <- us_counties(states = "Oregon") %>% 
@@ -39,13 +41,15 @@ ORpermits <- permits %>%
   mutate(name = recode(name,
                        "Hood River" = "HoodRiver"))
 
+View(permits)
+
 ```
 
 ## Single Family Permits across the US
 
 ```{r}
 
-ggplot(single_family, aes(x = year, y = value, group = county)) +
+ggplot(single_family, aes(x = year, y = state_permits, group = state_name)) +
   geom_line() +
   facet_geo(facets = ~state_name, grid = us_state_grid1, label = NULL, scales = "free_y") +
   labs(x = "Year (1980 - 2010)",

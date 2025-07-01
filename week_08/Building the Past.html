@@ -140,20 +140,29 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb8-4"><a href="#cb8-4"></a>single_family <span class="ot">&lt;-</span> permits <span class="sc">%&gt;%</span> </span>
 <span id="cb8-5"><a href="#cb8-5"></a>  <span class="fu">filter</span>(variable <span class="sc">==</span> <span class="st">"Single Family"</span>) <span class="sc">%&gt;%</span> </span>
 <span id="cb8-6"><a href="#cb8-6"></a>  <span class="fu">rename</span>(<span class="at">statefp =</span> state) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-7"><a href="#cb8-7"></a>  <span class="fu">left_join</span>(states, <span class="fu">join_by</span>(statefp))</span>
-<span id="cb8-8"><a href="#cb8-8"></a></span>
-<span id="cb8-9"><a href="#cb8-9"></a></span>
-<span id="cb8-10"><a href="#cb8-10"></a>ORcounties <span class="ot">&lt;-</span> <span class="fu">us_counties</span>(<span class="at">states =</span> <span class="st">"Oregon"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-11"><a href="#cb8-11"></a>  { .[, <span class="sc">-</span><span class="dv">13</span>] } <span class="sc">%&gt;%</span> </span>
-<span id="cb8-12"><a href="#cb8-12"></a>  <span class="fu">mutate</span>(<span class="at">statefp =</span> <span class="fu">as.numeric</span>(statefp)) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-13"><a href="#cb8-13"></a>  <span class="fu">mutate</span>(<span class="at">county =</span> <span class="fu">as.numeric</span>(countyfp))</span>
-<span id="cb8-14"><a href="#cb8-14"></a></span>
-<span id="cb8-15"><a href="#cb8-15"></a>ORpermits <span class="ot">&lt;-</span> permits <span class="sc">%&gt;%</span> </span>
-<span id="cb8-16"><a href="#cb8-16"></a>  <span class="fu">filter</span>(StateAbbr <span class="sc">==</span> <span class="st">"OR"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-17"><a href="#cb8-17"></a>  <span class="fu">filter</span>(variable <span class="sc">==</span> <span class="st">"Single Family"</span>) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-18"><a href="#cb8-18"></a>  <span class="fu">left_join</span>(ORcounties, <span class="fu">join_by</span>(county)) <span class="sc">%&gt;%</span> </span>
-<span id="cb8-19"><a href="#cb8-19"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">recode</span>(name,</span>
-<span id="cb8-20"><a href="#cb8-20"></a>                       <span class="st">"Hood River"</span> <span class="ot">=</span> <span class="st">"HoodRiver"</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb8-7"><a href="#cb8-7"></a>  <span class="fu">left_join</span>(states, <span class="fu">join_by</span>(statefp)) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-8"><a href="#cb8-8"></a>  <span class="fu">group_by</span>(state_name, year) <span class="sc">%&gt;%</span> </span>
+<span id="cb8-9"><a href="#cb8-9"></a>  <span class="fu">summarise</span>(<span class="at">state_permits =</span> <span class="fu">sum</span>(value))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>`summarise()` has grouped output by 'state_name'. You can override using the
+`.groups` argument.</code></pre>
+</div>
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a>ORcounties <span class="ot">&lt;-</span> <span class="fu">us_counties</span>(<span class="at">states =</span> <span class="st">"Oregon"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-2"><a href="#cb10-2"></a>  { .[, <span class="sc">-</span><span class="dv">13</span>] } <span class="sc">%&gt;%</span> </span>
+<span id="cb10-3"><a href="#cb10-3"></a>  <span class="fu">mutate</span>(<span class="at">statefp =</span> <span class="fu">as.numeric</span>(statefp)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-4"><a href="#cb10-4"></a>  <span class="fu">mutate</span>(<span class="at">county =</span> <span class="fu">as.numeric</span>(countyfp))</span>
+<span id="cb10-5"><a href="#cb10-5"></a></span>
+<span id="cb10-6"><a href="#cb10-6"></a>ORpermits <span class="ot">&lt;-</span> permits <span class="sc">%&gt;%</span> </span>
+<span id="cb10-7"><a href="#cb10-7"></a>  <span class="fu">filter</span>(StateAbbr <span class="sc">==</span> <span class="st">"OR"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-8"><a href="#cb10-8"></a>  <span class="fu">filter</span>(variable <span class="sc">==</span> <span class="st">"Single Family"</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-9"><a href="#cb10-9"></a>  <span class="fu">left_join</span>(ORcounties, <span class="fu">join_by</span>(county)) <span class="sc">%&gt;%</span> </span>
+<span id="cb10-10"><a href="#cb10-10"></a>  <span class="fu">mutate</span>(<span class="at">name =</span> <span class="fu">recode</span>(name,</span>
+<span id="cb10-11"><a href="#cb10-11"></a>                       <span class="st">"Hood River"</span> <span class="ot">=</span> <span class="st">"HoodRiver"</span>))</span>
+<span id="cb10-12"><a href="#cb10-12"></a></span>
+<span id="cb10-13"><a href="#cb10-13"></a><span class="fu">View</span>(permits)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <section id="single-family-permits-across-the-us" class="level2">
@@ -161,14 +170,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="fu">ggplot</span>(single_family, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> value, <span class="at">group =</span> county)) <span class="sc">+</span></span>
-<span id="cb9-2"><a href="#cb9-2"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb9-3"><a href="#cb9-3"></a>  <span class="fu">facet_geo</span>(<span class="at">facets =</span> <span class="sc">~</span>state_name, <span class="at">grid =</span> us_state_grid1, <span class="at">label =</span> <span class="cn">NULL</span>, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb9-4"><a href="#cb9-4"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year (1980 - 2010)"</span>,</span>
-<span id="cb9-5"><a href="#cb9-5"></a>       <span class="at">y =</span> <span class="st">"Number of Single Family of Permits </span><span class="sc">\n</span><span class="st">(Scaled to Account for Population)"</span>) <span class="sc">+</span> </span>
-<span id="cb9-6"><a href="#cb9-6"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb9-7"><a href="#cb9-7"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb9-8"><a href="#cb9-8"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">ggplot</span>(single_family, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> state_permits, <span class="at">group =</span> state_name)) <span class="sc">+</span></span>
+<span id="cb11-2"><a href="#cb11-2"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb11-3"><a href="#cb11-3"></a>  <span class="fu">facet_geo</span>(<span class="at">facets =</span> <span class="sc">~</span>state_name, <span class="at">grid =</span> us_state_grid1, <span class="at">label =</span> <span class="cn">NULL</span>, <span class="at">scales =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb11-4"><a href="#cb11-4"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year (1980 - 2010)"</span>,</span>
+<span id="cb11-5"><a href="#cb11-5"></a>       <span class="at">y =</span> <span class="st">"Number of Single Family of Permits </span><span class="sc">\n</span><span class="st">(Scaled to Account for Population)"</span>) <span class="sc">+</span> </span>
+<span id="cb11-6"><a href="#cb11-6"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb11-7"><a href="#cb11-7"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb11-8"><a href="#cb11-8"></a>  <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>
@@ -179,7 +188,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># maybe group by county in aes to create the right geom_line</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1"></a><span class="co"># maybe group by county in aes to create the right geom_line</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 </section>
@@ -188,17 +197,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1"></a><span class="fu">ggplot</span>(ORpermits, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> value)) <span class="sc">+</span></span>
-<span id="cb11-2"><a href="#cb11-2"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
-<span id="cb11-3"><a href="#cb11-3"></a>  <span class="fu">facet_geo</span>(<span class="at">facets =</span> <span class="sc">~</span>name,</span>
-<span id="cb11-4"><a href="#cb11-4"></a>            <span class="at">grid =</span> us_or_counties_grid1,</span>
-<span id="cb11-5"><a href="#cb11-5"></a>            <span class="at">label =</span> <span class="cn">NULL</span>,</span>
-<span id="cb11-6"><a href="#cb11-6"></a>            <span class="at">scale =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
-<span id="cb11-7"><a href="#cb11-7"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb11-8"><a href="#cb11-8"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
-<span id="cb11-9"><a href="#cb11-9"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year (1980 - 2010"</span>,</span>
-<span id="cb11-10"><a href="#cb11-10"></a>         <span class="at">y =</span> <span class="st">"Number of Single Family Permits </span><span class="sc">\n</span><span class="st">(Scaled to Account for Population)"</span>) <span class="sc">+</span></span>
-<span id="cb11-11"><a href="#cb11-11"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1"></a><span class="fu">ggplot</span>(ORpermits, <span class="fu">aes</span>(<span class="at">x =</span> year, <span class="at">y =</span> value)) <span class="sc">+</span></span>
+<span id="cb13-2"><a href="#cb13-2"></a>  <span class="fu">geom_line</span>() <span class="sc">+</span></span>
+<span id="cb13-3"><a href="#cb13-3"></a>  <span class="fu">facet_geo</span>(<span class="at">facets =</span> <span class="sc">~</span>name,</span>
+<span id="cb13-4"><a href="#cb13-4"></a>            <span class="at">grid =</span> us_or_counties_grid1,</span>
+<span id="cb13-5"><a href="#cb13-5"></a>            <span class="at">label =</span> <span class="cn">NULL</span>,</span>
+<span id="cb13-6"><a href="#cb13-6"></a>            <span class="at">scale =</span> <span class="st">"free_y"</span>) <span class="sc">+</span></span>
+<span id="cb13-7"><a href="#cb13-7"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb13-8"><a href="#cb13-8"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb13-9"><a href="#cb13-9"></a>    <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Year (1980 - 2010"</span>,</span>
+<span id="cb13-10"><a href="#cb13-10"></a>         <span class="at">y =</span> <span class="st">"Number of Single Family Permits </span><span class="sc">\n</span><span class="st">(Scaled to Account for Population)"</span>) <span class="sc">+</span></span>
+<span id="cb13-11"><a href="#cb13-11"></a>    <span class="fu">theme_minimal</span>()</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div>

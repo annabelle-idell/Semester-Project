@@ -1,0 +1,28 @@
+---
+title: "Dashboard"
+format: dashboard
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+
+
+```
+
+
+
+
+```{r}
+#| title: My Iris Chart
+
+iris %>% ggplot(aes(x = Petal.Length, y = Petal.Width)) + geom_point()
+
+```
+
+## Row (height = %)
+
+```{r}
+iris %>% ggplot(aes(x = Petal.Length, y = Petal.Width)) + geom_boxplot()
+```
+

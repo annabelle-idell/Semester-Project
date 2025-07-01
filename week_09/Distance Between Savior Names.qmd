@@ -13,7 +13,6 @@ warnings: false
 ```{r}
 library(tidyverse)
 library(stringi)
-library(beeswarm)
 
 scriptures <- read_csv("https://github.com/beandog/lds-scriptures/raw/master/csv/lds-scriptures.csv")
 
@@ -43,9 +42,10 @@ word_tibble <- tibble(word_count) %>%
 ```{r}
 
 ggplot(data = word_tibble, aes(word_count)) +
-  geom_freqpoly() +
+  geom_histogram(binwidth = 25) +
   geom_vline(xintercept = mean_count, color = "red", lty = 2) +
-  scale_x_continuous(trans = "sqrt") +
+  scale_x_continuous(limit = c(0,1000),
+                     breaks = seq()) +
   theme_bw()
 
 ```

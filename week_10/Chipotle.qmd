@@ -10,13 +10,11 @@ execute:
 warnings: false
 ---
 
-
 ```{r}
 library(tidyverse)
 library(stringi)
 
 ```
-
 
 ```{r}
 mystring <- list('{"Monday":94,"Tuesday":76,"Wednesday":89,"Thursday":106,"Friday":130,"Saturday":128,"Sunday":58}')
@@ -43,27 +41,26 @@ chipotle_day <- function(x) {
 
 ```
 
-
 ## Test 1
+
 ```{r}
 chipotle('{“Monday”:94,“Tuesday”:76,“Wednesday”:89,“Thursday”:106,“Friday”:130,“Saturday”:128,“Sunday”:58}')
 
 chipotle_day('{"Monday":94,"Tuesday":76,"Wednesday":89,"Thursday":106,"Friday":130,"Saturday":128,"Sunday":58}')
 ```
 
-
 ## Test 2
+
 ```{r}
 chipotle('{“Monday”:18,“Tuesday”:16,“Wednesday”:14,“Thursday”:27,“Friday”:26,“Saturday”:36,“Sunday”:20}')
 
 chipotle_day('{“Monday”:18,“Tuesday”:16,“Wednesday”:14,“Thursday”:27,“Friday”:26,“Saturday”:36,“Sunday”:20}')
 ```
 
-
 ## Test 3
+
 ```{r}
 chipotle('{“Monday”:0,“Tuesday”:0,“Wednesday”:1,“Thursday”:0,“Friday”:0,“Saturday”:1,“Sunday”:0}')
 
 chipotle_day('{“Monday”:0,“Tuesday”:0,“Wednesday”:1,“Thursday”:0,“Friday”:0,“Saturday”:1,“Sunday”:0}')
 ```
-

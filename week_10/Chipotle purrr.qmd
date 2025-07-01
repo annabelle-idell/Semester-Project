@@ -15,11 +15,9 @@ library(tidyverse)
 library(stringi)
 ```
 
-
 ```{r}
 data_chipotle <- read_csv("https://byuistats.github.io/M335/data/chipotle_reduced.csv")
 ```
-
 
 ```{r}
 # Previous Functions
@@ -31,7 +29,8 @@ chipotle <- function(x) {
 }
 
 chipotle_day <- function(x) {
-  chipotle(x) %>% slice_max(customers, n = 1)
+  chipotle(x) %>% slice_max(customers, n = 1) %>% 
+  pull(weekday) %>% str_c()
 }
 
 
@@ -46,4 +45,3 @@ promotion_day <- data_chipotle %>%
 print(promotion_day)
 
 ```
-

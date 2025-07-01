@@ -80,9 +80,22 @@ states <- us_states() %>%
 single_family <- permits %>% 
   filter(variable == "Single Family") %>% 
   rename(statefp = state) %>% 
-  left_join(states, join_by(statefp))
+  left_join(states, join_by(statefp)) %>% 
+  group_by(state_name, year) %>% 
+  summarise(state_permits = sum(value))
+```
+
+::: {.cell-output .cell-output-stderr}
+
+```
+`summarise()` has grouped output by 'state_name'. You can override using the
+`.groups` argument.
+```
 
 
+:::
+
+```{.r .cell-code}
 ORcounties <- us_counties(states = "Oregon") %>% 
   { .[, -13] } %>% 
   mutate(statefp = as.numeric(statefp)) %>% 
@@ -94,6 +107,8 @@ ORpermits <- permits %>%
   left_join(ORcounties, join_by(county)) %>% 
   mutate(name = recode(name,
                        "Hood River" = "HoodRiver"))
+
+View(permits)
 ```
 :::
 
@@ -104,7 +119,7 @@ ORpermits <- permits %>%
 ::: {.cell}
 
 ```{.r .cell-code}
-ggplot(single_family, aes(x = year, y = value, group = county)) +
+ggplot(single_family, aes(x = year, y = state_permits, group = state_name)) +
   geom_line() +
   facet_geo(facets = ~state_name, grid = us_state_grid1, label = NULL, scales = "free_y") +
   labs(x = "Year (1980 - 2010)",
