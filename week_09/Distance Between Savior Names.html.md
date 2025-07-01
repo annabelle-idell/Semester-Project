@@ -37,7 +37,6 @@ library(tidyverse)
 
 ```{.r .cell-code}
 library(stringi)
-library(beeswarm)
 
 scriptures <- read_csv("https://github.com/beandog/lds-scriptures/raw/master/csv/lds-scriptures.csv")
 ```
@@ -88,16 +87,31 @@ word_tibble <- tibble(word_count) %>%
 
 ```{.r .cell-code}
 ggplot(data = word_tibble, aes(word_count)) +
-  geom_freqpoly() +
+  geom_histogram(binwidth = 25, color  ="black", fill = "lightgray") +
   geom_vline(xintercept = mean_count, color = "red", lty = 2) +
-  scale_x_continuous(trans = "sqrt") +
+  scale_x_continuous(limit = c(0,750),
+                     breaks = seq(0, 1000, 100)) +
+  labs(title = "The Average Words Between the Savior's \nNames in the Book of Mormon is 63.2",
+       x = "Number of Words",
+       y = "Frequency") +
   theme_bw()
 ```
 
 ::: {.cell-output .cell-output-stderr}
 
 ```
-`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
+Warning: Removed 16 rows containing non-finite outside the scale range
+(`stat_bin()`).
+```
+
+
+:::
+
+::: {.cell-output .cell-output-stderr}
+
+```
+Warning: Removed 2 rows containing missing values or values outside the scale range
+(`geom_bar()`).
 ```
 
 

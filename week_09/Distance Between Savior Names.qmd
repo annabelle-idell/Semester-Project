@@ -42,10 +42,13 @@ word_tibble <- tibble(word_count) %>%
 ```{r}
 
 ggplot(data = word_tibble, aes(word_count)) +
-  geom_histogram(binwidth = 25) +
+  geom_histogram(binwidth = 25, color  ="black", fill = "lightgray") +
   geom_vline(xintercept = mean_count, color = "red", lty = 2) +
-  scale_x_continuous(limit = c(0,1000),
-                     breaks = seq()) +
+  scale_x_continuous(limit = c(0,750),
+                     breaks = seq(0, 1000, 100)) +
+  labs(title = "The Average Words Between the Savior's \nNames in the Book of Mormon is 63.2",
+       x = "Number of Words",
+       y = "Frequency") +
   theme_bw()
 
 ```
