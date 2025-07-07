@@ -7,6 +7,7 @@ format:
 editor: visual
 execute: 
   keep-md: true
+  keep-rds: true
 warnings: false
 ---
 
@@ -151,7 +152,7 @@ ggplot(promotion_day, aes(x = factor(popularity, levels = c("Monday", "Tuesday",
 ::: {.cell}
 
 ```{.r .cell-code}
-chipotle_rds <- saveRDS(promotion_day2, file = "Chipotle purr data")
+saveRDS(promotion_day2, "chipotle_purrr.rds")
 ```
 :::
 
