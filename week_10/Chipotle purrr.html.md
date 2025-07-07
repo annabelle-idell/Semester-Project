@@ -10,18 +10,67 @@ execute:
 warnings: false
 ---
 
-```{r}
+
+::: {.cell}
+
+```{.r .cell-code}
 library(tidyverse)
+```
+
+::: {.cell-output .cell-output-stderr}
+
+```
+── Attaching core tidyverse packages ──────────────────────── tidyverse 2.0.0 ──
+✔ dplyr     1.1.4     ✔ readr     2.1.5
+✔ forcats   1.0.0     ✔ stringr   1.5.1
+✔ ggplot2   3.5.1     ✔ tibble    3.2.1
+✔ lubridate 1.9.3     ✔ tidyr     1.3.1
+✔ purrr     1.0.2     
+── Conflicts ────────────────────────────────────────── tidyverse_conflicts() ──
+✖ dplyr::filter() masks stats::filter()
+✖ dplyr::lag()    masks stats::lag()
+ℹ Use the conflicted package (<http://conflicted.r-lib.org/>) to force all conflicts to become errors
+```
+
+
+:::
+
+```{.r .cell-code}
 library(stringi)
 ```
+:::
 
-```{r}
+::: {.cell}
+
+```{.r .cell-code}
 data_chipotle <- read_csv("https://byuistats.github.io/M335/data/chipotle_reduced.csv")
-
-View(data_chipotle)
 ```
 
-```{r}
+::: {.cell-output .cell-output-stderr}
+
+```
+Rows: 2844 Columns: 22
+── Column specification ────────────────────────────────────────────────────────
+Delimiter: ","
+chr  (12): placekey, street_address, city, region, open_hours, visits_by_day...
+dbl   (8): latitude, longitude, postal_code, phone_number, raw_visit_counts,...
+dttm  (2): date_range_start, date_range_end
+
+ℹ Use `spec()` to retrieve the full column specification for this data.
+ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
+```
+
+
+:::
+
+```{.r .cell-code}
+View(data_chipotle)
+```
+:::
+
+::: {.cell}
+
+```{.r .cell-code}
 ## Previous Functions
 
 chipotle <- function(x) {
@@ -35,9 +84,14 @@ chipotle_day <- function(x) {
   pull(weekday) %>% str_c()
 }
 ```
+:::
+
 
 ## Function 1
-```{r}
+
+::: {.cell}
+
+```{.r .cell-code}
 ## Function #1
 
 promotion_day2 <- data_chipotle %>% 
@@ -53,13 +107,23 @@ ggplot(promotion_day3, aes(x = factor(weekday, levels = c("Monday", "Tuesday", "
   geom_col(fill = "firebrick") +
   labs(x = "Days of the Week") +
   theme_classic()
-
-# total visits for the entire company, benefits the franchisees if they pay a monthly subscription and benefit from the label doing well
-
 ```
 
+::: {.cell-output-display}
+![](Chipotle-purrr_files/figure-html/unnamed-chunk-4-1.png){width=672}
+:::
+
+```{.r .cell-code}
+# total visits for the entire company, benefits the franchisees if they pay a monthly subscription and benefit from the label doing well
+```
+:::
+
+
 ## Function 2
-```{r}
+
+::: {.cell}
+
+```{.r .cell-code}
 ## Function #2
 
 data_chipotle <- data_chipotle %>% filter(!is.na(popularity_by_day))
@@ -73,14 +137,24 @@ ggplot(promotion_day, aes(x = factor(popularity, levels = c("Monday", "Tuesday",
   geom_bar(fill = "firebrick") +
   labs(x = "Days of the Week") +
   theme_classic()
+```
 
+::: {.cell-output-display}
+![](Chipotle-purrr_files/figure-html/unnamed-chunk-5-1.png){width=672}
+:::
+
+```{.r .cell-code}
 # one observation per store, unweighted, representative of all stores, benefits the franchisees if 
 ```
+:::
 
-```{r}
+::: {.cell}
+
+```{.r .cell-code}
 chipotle_rds <- saveRDS(promotion_day2, file = "Chipotle purr data")
-
 ```
+:::
+
 
 
 ## Business Recommendation

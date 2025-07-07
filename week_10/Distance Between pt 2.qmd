@@ -19,18 +19,15 @@ scriptures <- read_csv("https://github.com/beandog/lds-scriptures/raw/master/csv
 savior_names <- read_rds("https://byuistats.github.io/M335/data/BoM_SaviorNames.rds")
 ```
 
+
 ```{r}
-## Example 
-chipotle <- function(x) {
-  weekday <- str_extract_all(x, "[:alpha:]+") %>% unlist()
-  customers <- str_extract_all(x, "\\d+") %>% unlist() %>% as.numeric()
-  tibble(weekday, customers) %>% arrange(desc(customers))
-}
-###################
-#Real Code
+
+the_names <- str_c(savior_names$name, collapse = "|")
 
 books <- function(x) {
-  
+  scriptures2 <- str_c(x$scripture_text) %>% 
+  str_flatten() %>% str_split(pattern = the_names)
+  word_count <- unlist(scriptures2) %>% str_count(pattern = "\\S+") 
 }
 
 scriptures <- scriptures %>% 
@@ -38,6 +35,33 @@ scriptures <- scriptures %>%
 
 scriptures2 <- scriptures %>% 
   group_by(book_title) %>% 
-  summarise()
+  nest() %>% 
+  mutate(distance_between = map(data, books)) %>% 
+  select(c(book_title, distance_between)) %>% 
+  unnest(distance_between)
+
   
 ```
+
+
+```{r}
+
+
+
+
+
+
+
+# mean_count <- mean(word_count)
+# # 63.2
+# 
+# word_tibble <- tibble(word_count) %>% 
+#   filter(word_count >= 0)
+
+```
+
+```{r}
+
+```
+
+
