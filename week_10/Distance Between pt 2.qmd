@@ -19,7 +19,6 @@ scriptures <- read_csv("https://github.com/beandog/lds-scriptures/raw/master/csv
 savior_names <- read_rds("https://byuistats.github.io/M335/data/BoM_SaviorNames.rds")
 ```
 
-
 ```{r}
 
 the_names <- str_c(savior_names$name, collapse = "|")
@@ -46,11 +45,20 @@ scriptures2 <- scriptures %>%
 
 ```{r}
 
-
-
-
-
-
+ggplot(scriptures2, aes(x = distance_between, fill = book_title, color = book_title)) +
+  geom_area(stat = "bin") +
+  labs(x = "Number of Words Between Instances of Savior Names",
+       y = NULL, 
+       title = "There is an average of 63.2 words between each instance of the Savior's name.") +
+  scale_y_continuous(limits = c(0, 10),
+                     labels = NULL, ) +
+  scale_x_continuous(trans = "sqrt",
+                     limits = c(0, 2000)) +
+  theme_classic() +
+  theme(axis.ticks.y = element_blank(),
+        strip.text = element_blank(),
+        legend.title = element_text()) +
+  facet_grid(book_title~.)
 
 # mean_count <- mean(word_count)
 # # 63.2
@@ -63,5 +71,3 @@ scriptures2 <- scriptures %>%
 ```{r}
 
 ```
-
-
