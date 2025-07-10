@@ -1,0 +1,68 @@
+---
+title: "Age of Planes Dashboard"
+author: Annabelle Idell - Boeing Strategy Department
+format: dashboard
+    
+---
+```{r}
+library(tidyverse)
+library(nycflights13)
+
+plane_age <- planes %>% 
+  mutate(age = 2013 - year) %>% 
+  inner_join(flights, by = join_by(tailnum)) %>%
+  left_join(airports, by = join_by(origin == faa)) %>%
+  left_join(airports, by = join_by(dest == faa), suffix = c(".origin", ".dest")) %>% 
+  filter(!is.na(age)) %>% 
+  mutate(age_group = case_when(
+    age %in% c(0:10) ~ "0-10",
+    age %in% c(11:20) ~ "11-20",
+    age %in% c(21:30) ~ "21-30",
+    age %in% c(30:100) ~ ">30"
+  ))
+
+plane_carrier <- plane_age %>% 
+  left_join(airlines, by = join_by(carrier))
+```
+
+
+## Row {height = 20%}
+
+
+![](C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/docs/boeing_logo.png)
+
+
+## Column {width = 50%}
+
+```{r}
+ggplot(plane_age, aes(x = age, y = dep_delay)) +
+  geom_smooth(color = "#1A408F") +
+  labs(title = "Departure delay for planes peaks at 10 years and is lowest at 30 years",
+       x = "Age of Plane",
+       y = "Delayed Departure in Minutes") +
+  coord_cartesian(xlim = c(0, 30)) +
+  theme_bw()
+```
+
+## Column {width = 50%}
+
+```{r}
+ggplot(plane_age, aes(x = factor(age_group, levels = c("0-10", "11-20", "21-30", ">30")), y = dep_delay)) +
+  geom_boxplot(color = "#1A409F", alpha = .1) +
+  labs(title = "Younger planes experience delayed departure more than older planes",
+       x = "Planes by Age Group",
+       y = "Departure Delay in Minutes") +
+  scale_y_continuous(limits = c(-50, 100)) +
+  theme_bw()
+```
+
+```{r}
+ggplot(plane_carrier, aes(x = name, y = age)) +
+  geom_boxplot(fill = "#1A409F") +
+  labs(title = "The oldest planes belong to American Airlines and Envoy Air",
+       x = "Aircraft Carrier",
+       y = "Age of Plane") +
+  coord_flip() +
+  theme_bw()
+```
+
