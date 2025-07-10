@@ -1,0 +1,22 @@
+---
+title: "Tidyquant"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(tidyquant)
+```
+
+```{r}
+# CNK, SBUX, MSFT
+
+stocks <- tq_get(c("CNK", "SBUX", "MSFT"), get = "stock.prices")
+```
+
+```{r}
+ggplot(stocks, aes(x = date, y = adjusted, group = symbol, color = symbol)) +
+  geom_line() +
+  theme_bw()
+```
