@@ -16,7 +16,6 @@ library(readxl)
 library(tidyverse)
 Height <- read_excel("C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/week_04/Height.xlsx", skip = 1)
 
-View(Height)
 ```
 
 ```{r}
@@ -39,7 +38,7 @@ heights2 <- Height %>%
 ggplot(heights2, aes(x = year_decade, y = height_cm, group = country)) +
   geom_line(color = "darkgray", pch = 19) +
   geom_line(data = subset(heights2, country == "Germany"), color = "blue", pch = 19, size = 1) +
-  labs(title = "Average height in Germany is increasing over time, \nmatching the gradual increase overall worldwide",
+  labs(title = "Average height in Germany is increasing over time, comparable to \nthe gradual increase worldwide",
        x = "Year (Decades)", y = "Height (cm)") +
   theme_bw()
 ```
