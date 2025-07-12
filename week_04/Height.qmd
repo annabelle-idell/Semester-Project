@@ -39,7 +39,8 @@ heights2 <- Height %>%
 ggplot(heights2, aes(x = year_decade, y = height_cm, group = country)) +
   geom_line(color = "darkgray", pch = 19) +
   geom_line(data = subset(heights2, country == "Germany"), color = "blue", pch = 19, size = 1) +
-  labs(x = "Year (Decades)", y = "Height (cm)") +
+  labs(title = "Average height in Germany is increasing over time, \nmatching the gradual increase overall worldwide",
+       x = "Year (Decades)", y = "Height (cm)") +
   theme_bw()
 ```
 

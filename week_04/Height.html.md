@@ -69,7 +69,8 @@ heights2 <- Height %>%
 ggplot(heights2, aes(x = year_decade, y = height_cm, group = country)) +
   geom_line(color = "darkgray", pch = 19) +
   geom_line(data = subset(heights2, country == "Germany"), color = "blue", pch = 19, size = 1) +
-  labs(x = "Year (Decades)", y = "Height (cm)") +
+  labs(title = "Average height in Germany is increasing over time, \nmatching the gradual increase overall worldwide",
+       x = "Year (Decades)", y = "Height (cm)") +
   theme_bw()
 ```
 
@@ -109,5 +110,4 @@ Warning in geom_line(data = subset(heights2, country == "Germany"), color =
 :::
 
 
-The data displayed features the average heights for countries around the world over four decades. A claim has been made that humans are growing taller over time, which is supported by the data in this visual. Before 1840, there appears to be very little growth. Gradually after that point, height seems to climb, with many countries even surpassing 170cm tall. Highlighted in blue, the Federal Republic of Germany declined in height until 1850, when average height began to grow until reaching over 180 cm in 1980. From looking at this visual, I would support the claim that height is growing taller over the years, faster for some countries than others, but generally trending upward. I would also predict that average height continues to increase after 1980. 
-
+The data displayed features the average heights for countries around the world over four decades. A claim has been made that humans are growing taller over time, which is supported by the data in this visual. Before 1840, there appears to be very little growth. Gradually after that point, height seems to climb, with many countries even surpassing 170cm tall. Highlighted in blue, the Federal Republic of Germany declined in height until 1850, when average height began to grow until reaching over 180 cm in 1980. From looking at this visual, I would support the claim that height is growing taller over the years, faster for some countries than others, but generally trending upward. I would also predict that average height continues to increase after 1980.

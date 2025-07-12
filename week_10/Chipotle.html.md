@@ -62,14 +62,14 @@ chipotle <- function(x) {
 
 chipotle_day <- function(x) {
   chipotle(x) %>% slice_max(customers, n = 1) %>% 
-  pull(weekday) %>% str_c()
+  pull(weekday) %>% str_c(collapse = ", ")
 }
 ```
 :::
 
 
-
 ## Test 1
+
 
 ::: {.cell}
 
@@ -110,8 +110,8 @@ chipotle_day('{"Monday":94,"Tuesday":76,"Wednesday":89,"Thursday":106,"Friday":1
 :::
 
 
-
 ## Test 2
+
 
 ::: {.cell}
 
@@ -152,8 +152,8 @@ chipotle_day('{“Monday”:18,“Tuesday”:16,“Wednesday”:14,“Thursday�
 :::
 
 
-
 ## Test 3
+
 
 ::: {.cell}
 
@@ -186,7 +186,7 @@ chipotle_day('{“Monday”:0,“Tuesday”:0,“Wednesday”:1,“Thursday”:0
 ::: {.cell-output .cell-output-stdout}
 
 ```
-[1] "Wednesday" "Saturday" 
+[1] "Wednesday, Saturday"
 ```
 
 
