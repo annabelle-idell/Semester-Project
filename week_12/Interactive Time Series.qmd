@@ -1,0 +1,51 @@
+---
+title: "Interactive Time Series"
+format: 
+  html:
+    code-fold: true
+    code-line-numbers: true
+editor: visual
+execute: 
+  keep-md: false
+warning: false
+---
+
+```{r}
+library(tidyverse)
+library(dygraphs)
+library(tidyquant)
+```
+
+
+```{r}
+stock_price <- tq_get(c("AMZN","MSFT","WMT", "INTC", "TGT", "DIS", "JBLU")) %>%
+  select(c(symbol, date, adjusted))
+
+stock_price2 <- stock_price %>% 
+  pivot_wider(names_from = symbol, values_from = adjusted)
+  
+stocks_xts <- tk_xts(stock_price2, date_var = date)
+
+
+stocks_xts <- (stocks_xts)['2020/']
+
+```
+
+
+```{r}
+dygraph(stocks_xts,
+        main = "Comparison of Popular Stocks (2020 - 2025)") %>% 
+  dySeries("AMZN", label = "Amazon") %>% 
+  dySeries("MSFT", label = "Microsoft") %>% 
+  dySeries("WMT", label = "Walmart") %>% 
+  dySeries("INTC", label = "Intel") %>% 
+  dySeries("TGT", label = "Target") %>% 
+  dySeries("DIS", label = "Disney") %>% 
+  dySeries("JBLU", label = "Jet Blue") %>% 
+  dyLegend(width = 550) %>% 
+  dyRangeSelector(height = 20, strokeColor = "")
+```
+
+## Conclusion
+
+Interestingly, most of the different stocks follow similar patterns. This must be because they are impacted similarly by changes in the economy and world circumstances. In December of 2022, nearly all of the companies experience a low point after climbing in 2021. It seems that all of the stocks were at low points in January of 2020, and then they almost break into three different levels throughout 2021: first Microsoft, then Target, Amazon, and Disney, and lastly Walmart, Intel, and Jet Blue. Microsoft begins to take off, the second group stays relatively close between 100-200, and the third group stays generally below 100.
