@@ -2,8 +2,8 @@
 title: "Age of Planes Dashboard"
 author: Annabelle Idell - Boeing Strategy Department
 format: dashboard
-    
 ---
+
 ```{r}
 library(tidyverse)
 library(nycflights13)
@@ -25,12 +25,9 @@ plane_carrier <- plane_age %>%
   left_join(airlines, by = join_by(carrier))
 ```
 
-
 ## Row {height = 20%}
 
-
-![](C:/Users/annab/Downloads/R/DS350_SP25_Idell_Anna/docs/boeing_logo.png)
-
+![](images/boeing_logo.png)
 
 ## Column {width = 50%}
 
@@ -65,4 +62,3 @@ ggplot(plane_carrier, aes(x = name, y = age)) +
   coord_flip() +
   theme_bw()
 ```
-
