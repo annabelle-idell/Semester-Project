@@ -85,20 +85,19 @@ scriptures2 <- scriptures %>%
 ```
 :::
 
-::: {.cell}
+::: {.cell figure-height='12' figure-width='5'}
 
 ```{.r .cell-code}
 ggplot(scriptures2, aes(x = distance_between, fill = book_title, color = book_title)) +
-  geom_area(stat = "bin") +
+  geom_area(stat = "bin", binwidth = 10) +
   labs(x = "Number of Words Between Instances of Savior Names",
        y = NULL, 
        title = "There is an average of 63.2 words between each instance of the Savior's name.") +
-  scale_y_continuous(limits = c(0, 10),
-                     labels = NULL, ) +
-  scale_x_continuous(trans = "sqrt",
-                     limits = c(0, 2000)) +
+  scale_y_continuous(labels = NULL) +
+  scale_x_continuous(limits = c(0, 500)) +
   theme_classic() +
   theme(axis.ticks.y = element_blank(),
+        axis.line.y = element_blank(),
         strip.text = element_blank(),
         legend.title = element_text()) +
   facet_grid(book_title~.)
@@ -107,16 +106,7 @@ ggplot(scriptures2, aes(x = distance_between, fill = book_title, color = book_ti
 ::: {.cell-output .cell-output-stderr}
 
 ```
-`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.
-```
-
-
-:::
-
-::: {.cell-output .cell-output-stderr}
-
-```
-Warning: Removed 2 rows containing non-finite outside the scale range
+Warning: Removed 44 rows containing non-finite outside the scale range
 (`stat_bin()`).
 ```
 

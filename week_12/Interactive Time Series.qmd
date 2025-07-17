@@ -16,7 +16,6 @@ library(dygraphs)
 library(tidyquant)
 ```
 
-
 ```{r}
 stock_price <- tq_get(c("AMZN","MSFT","WMT", "INTC", "TGT", "DIS", "JBLU")) %>%
   select(c(symbol, date, adjusted))
@@ -30,7 +29,6 @@ stocks_xts <- tk_xts(stock_price2, date_var = date)
 stocks_xts <- (stocks_xts)['2020/']
 
 ```
-
 
 ```{r}
 dygraph(stocks_xts,

@@ -156,29 +156,25 @@ dbl  (6): volume_id, book_id, chapter_id, verse_id, chapter_number, verse_nu...
 <span id="cb6-17"><a href="#cb6-17"></a>  <span class="fu">unnest</span>(distance_between)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<div class="cell">
+<div class="cell" data-figure-height="12" data-figure-width="5">
 <details class="code-fold">
 <summary>Code</summary>
 <div class="sourceCode cell-code" id="cb7"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1"></a><span class="fu">ggplot</span>(scriptures2, <span class="fu">aes</span>(<span class="at">x =</span> distance_between, <span class="at">fill =</span> book_title, <span class="at">color =</span> book_title)) <span class="sc">+</span></span>
-<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">geom_area</span>(<span class="at">stat =</span> <span class="st">"bin"</span>) <span class="sc">+</span></span>
+<span id="cb7-2"><a href="#cb7-2"></a>  <span class="fu">geom_area</span>(<span class="at">stat =</span> <span class="st">"bin"</span>, <span class="at">binwidth =</span> <span class="dv">10</span>) <span class="sc">+</span></span>
 <span id="cb7-3"><a href="#cb7-3"></a>  <span class="fu">labs</span>(<span class="at">x =</span> <span class="st">"Number of Words Between Instances of Savior Names"</span>,</span>
 <span id="cb7-4"><a href="#cb7-4"></a>       <span class="at">y =</span> <span class="cn">NULL</span>, </span>
 <span id="cb7-5"><a href="#cb7-5"></a>       <span class="at">title =</span> <span class="st">"There is an average of 63.2 words between each instance of the Savior's name."</span>) <span class="sc">+</span></span>
-<span id="cb7-6"><a href="#cb7-6"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">10</span>),</span>
-<span id="cb7-7"><a href="#cb7-7"></a>                     <span class="at">labels =</span> <span class="cn">NULL</span>, ) <span class="sc">+</span></span>
-<span id="cb7-8"><a href="#cb7-8"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">trans =</span> <span class="st">"sqrt"</span>,</span>
-<span id="cb7-9"><a href="#cb7-9"></a>                     <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">2000</span>)) <span class="sc">+</span></span>
-<span id="cb7-10"><a href="#cb7-10"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
-<span id="cb7-11"><a href="#cb7-11"></a>  <span class="fu">theme</span>(<span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb7-12"><a href="#cb7-12"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
-<span id="cb7-13"><a href="#cb7-13"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>()) <span class="sc">+</span></span>
-<span id="cb7-14"><a href="#cb7-14"></a>  <span class="fu">facet_grid</span>(book_title<span class="sc">~</span>.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<span id="cb7-6"><a href="#cb7-6"></a>  <span class="fu">scale_y_continuous</span>(<span class="at">labels =</span> <span class="cn">NULL</span>) <span class="sc">+</span></span>
+<span id="cb7-7"><a href="#cb7-7"></a>  <span class="fu">scale_x_continuous</span>(<span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">500</span>)) <span class="sc">+</span></span>
+<span id="cb7-8"><a href="#cb7-8"></a>  <span class="fu">theme_classic</span>() <span class="sc">+</span></span>
+<span id="cb7-9"><a href="#cb7-9"></a>  <span class="fu">theme</span>(<span class="at">axis.ticks.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-10"><a href="#cb7-10"></a>        <span class="at">axis.line.y =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-11"><a href="#cb7-11"></a>        <span class="at">strip.text =</span> <span class="fu">element_blank</span>(),</span>
+<span id="cb7-12"><a href="#cb7-12"></a>        <span class="at">legend.title =</span> <span class="fu">element_text</span>()) <span class="sc">+</span></span>
+<span id="cb7-13"><a href="#cb7-13"></a>  <span class="fu">facet_grid</span>(book_title<span class="sc">~</span>.)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output cell-output-stderr">
-<pre><code>`stat_bin()` using `bins = 30`. Pick better value with `binwidth`.</code></pre>
-</div>
-<div class="cell-output cell-output-stderr">
-<pre><code>Warning: Removed 2 rows containing non-finite outside the scale range
+<pre><code>Warning: Removed 44 rows containing non-finite outside the scale range
 (`stat_bin()`).</code></pre>
 </div>
 <div class="cell-output-display">
@@ -190,11 +186,11 @@ dbl  (6): volume_id, book_id, chapter_id, verse_id, chapter_number, verse_nu...
 </div>
 <details class="code-fold">
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1"></a><span class="co"># mean_count &lt;- mean(word_count)</span></span>
-<span id="cb10-2"><a href="#cb10-2"></a><span class="co"># # 63.2</span></span>
-<span id="cb10-3"><a href="#cb10-3"></a><span class="co"># </span></span>
-<span id="cb10-4"><a href="#cb10-4"></a><span class="co"># word_tibble &lt;- tibble(word_count) %&gt;% </span></span>
-<span id="cb10-5"><a href="#cb10-5"></a><span class="co">#   filter(word_count &gt;= 0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1"></a><span class="co"># mean_count &lt;- mean(word_count)</span></span>
+<span id="cb9-2"><a href="#cb9-2"></a><span class="co"># # 63.2</span></span>
+<span id="cb9-3"><a href="#cb9-3"></a><span class="co"># </span></span>
+<span id="cb9-4"><a href="#cb9-4"></a><span class="co"># word_tibble &lt;- tibble(word_count) %&gt;% </span></span>
+<span id="cb9-5"><a href="#cb9-5"></a><span class="co">#   filter(word_count &gt;= 0)</span></span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 
