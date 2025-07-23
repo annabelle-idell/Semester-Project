@@ -1,0 +1,581 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.4.555">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+
+<title>Interactive Time Series</title>
+<style>
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="Interactive Map Leaflet_files/libs/clipboard/clipboard.min.js"></script>
+<script src="Interactive Map Leaflet_files/libs/quarto-html/quarto.js"></script>
+<script src="Interactive Map Leaflet_files/libs/quarto-html/popper.min.js"></script>
+<script src="Interactive Map Leaflet_files/libs/quarto-html/tippy.umd.min.js"></script>
+<script src="Interactive Map Leaflet_files/libs/quarto-html/anchor.min.js"></script>
+<link href="Interactive Map Leaflet_files/libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="Interactive Map Leaflet_files/libs/quarto-html/quarto-syntax-highlighting.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="Interactive Map Leaflet_files/libs/bootstrap/bootstrap.min.js"></script>
+<link href="Interactive Map Leaflet_files/libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="Interactive Map Leaflet_files/libs/bootstrap/bootstrap.min.css" rel="stylesheet" id="quarto-bootstrap" data-mode="light">
+<link href="Interactive Map Leaflet_files/libs/htmltools-fill-0.5.8.1/fill.css" rel="stylesheet">
+
+<script src="Interactive Map Leaflet_files/libs/htmlwidgets-1.6.4/htmlwidgets.js"></script>
+
+<script src="Interactive Map Leaflet_files/libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+
+<link href="Interactive Map Leaflet_files/libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+
+<script src="Interactive Map Leaflet_files/libs/leaflet-1.3.1/leaflet.js"></script>
+
+<link href="Interactive Map Leaflet_files/libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+
+<script src="Interactive Map Leaflet_files/libs/proj4-2.6.2/proj4.min.js"></script>
+
+<script src="Interactive Map Leaflet_files/libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+
+<link href="Interactive Map Leaflet_files/libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+
+<script src="Interactive Map Leaflet_files/libs/leaflet-binding-2.2.2/leaflet.js"></script>
+
+<script src="Interactive Map Leaflet_files/libs/leaflet-providers-2.0.0/leaflet-providers_2.0.0.js"></script>
+
+<script src="Interactive Map Leaflet_files/libs/leaflet-providers-plugin-2.2.2/leaflet-providers-plugin.js"></script>
+
+
+
+</head>
+
+<body class="fullcontent">
+
+<div id="quarto-content" class="page-columns page-rows-contents page-layout-article">
+
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">Interactive Time Series</h1>
+</div>
+
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb1"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb1-2"><a href="#cb1-2"></a><span class="fu">library</span>(leaflet)</span>
+<span id="cb1-3"><a href="#cb1-3"></a><span class="fu">library</span>(USAboundaries)</span>
+<span id="cb1-4"><a href="#cb1-4"></a><span class="fu">library</span>(ggrepel)</span>
+<span id="cb1-5"><a href="#cb1-5"></a><span class="fu">library</span>(sf)</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb2"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1"></a>US_cities <span class="ot">&lt;-</span> <span class="fu">us_cities</span>() <span class="sc">%&gt;%</span></span>
+<span id="cb2-2"><a href="#cb2-2"></a>  <span class="fu">filter</span>(<span class="sc">!</span>state_name <span class="sc">%in%</span> <span class="fu">c</span>(<span class="st">"Puerto Rico"</span>, <span class="st">"Alaska"</span>, <span class="st">"Hawaii"</span>, <span class="st">"District of Columbia"</span>)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-3"><a href="#cb2-3"></a>  <span class="fu">select</span>(<span class="fu">c</span>(city, state_name, population)) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-4"><a href="#cb2-4"></a>  <span class="fu">group_by</span>(state_name) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-5"><a href="#cb2-5"></a>  <span class="fu">slice_max</span>(population, <span class="at">n =</span> <span class="dv">3</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-6"><a href="#cb2-6"></a>  <span class="fu">arrange</span>(<span class="fu">desc</span>(population), <span class="at">.by_group =</span> <span class="cn">TRUE</span>) <span class="sc">%&gt;%</span> </span>
+<span id="cb2-7"><a href="#cb2-7"></a>  <span class="fu">mutate</span>(<span class="at">rank =</span> <span class="fu">c</span>(<span class="dv">1</span>, <span class="dv">2</span>, <span class="dv">3</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+</div>
+<div class="cell">
+<details class="code-fold">
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode numberSource r number-lines code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1"></a>pal<span class="ot">&lt;-</span><span class="fu">colorNumeric</span>(<span class="at">palette =</span> <span class="fu">c</span>(<span class="st">"blue"</span>, <span class="st">"lightblue"</span>), </span>
+<span id="cb3-2"><a href="#cb3-2"></a>                  <span class="at">domain =</span> US_cities<span class="sc">$</span>population)</span>
+<span id="cb3-3"><a href="#cb3-3"></a></span>
+<span id="cb3-4"><a href="#cb3-4"></a><span class="fu">leaflet</span>(<span class="at">data =</span> US_cities) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-5"><a href="#cb3-5"></a>  <span class="fu">addProviderTiles</span>(providers<span class="sc">$</span>OpenStreetMap.HOT) <span class="sc">%&gt;%</span> </span>
+<span id="cb3-6"><a href="#cb3-6"></a>  <span class="fu">addCircles</span>(<span class="at">radius =</span> US_cities<span class="sc">$</span>population<span class="sc">/</span><span class="dv">10</span>,</span>
+<span id="cb3-7"><a href="#cb3-7"></a>             <span class="at">label =</span> <span class="sc">~</span><span class="fu">paste</span>(city, <span class="st">"="</span>, <span class="st">"Population"</span>, population),</span>
+<span id="cb3-8"><a href="#cb3-8"></a>             <span class="at">fillOpacity =</span> .<span class="dv">1</span>,</span>
+<span id="cb3-9"><a href="#cb3-9"></a>             <span class="at">color =</span> <span class="sc">~</span><span class="fu">pal</span>(population<span class="sc">/</span><span class="dv">10</span>),</span>
+<span id="cb3-10"><a href="#cb3-10"></a>             <span class="at">fillColor =</span> <span class="sc">~</span><span class="fu">pal</span>(population<span class="sc">/</span><span class="dv">10</span>))</span></code><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item" id="htmlwidget-b4e976d37e53cb7519e5" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-b4e976d37e53cb7519e5">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"calls":[{"method":"addProviderTiles","args":["OpenStreetMap.HOT",null,null,{"errorTileUrl":"","noWrap":false,"detectRetina":false}]},{"method":"addCircles","args":[[33.5274441,32.3462512,30.668426,33.5721625,32.1542888,33.4019259,34.7254318,35.3492757,36.0715607,34.0193936,32.8152995,37.2968672,39.7618487,38.8672553,39.6880021,41.1873858,41.3108088,41.7660453,39.7352263,39.1606061,39.677569,30.3370193,25.775163,27.9700861,33.7629088,33.3655309,32.510197,43.5984881,43.582381,43.617852,41.8375511,41.763455,42.2633938,39.7766644,41.0881729,37.9877339,41.5739461,41.9670481,41.5541036,37.6906938,38.8890422,39.1225389,38.1780769,38.0401572,36.9709194,30.0686361,30.4484535,32.4670204,43.663811,44.0895941,44.8306292,39.3002135,39.4330863,39.0836473,42.33196,42.2694781,42.115454,42.3830375,42.961156,42.4929044,44.9633235,44.9488695,44.0154424,32.3158308,30.4160584,34.9508416,39.125212,38.6356988,37.194152,45.7895184,46.8693223,47.5014389,41.2646751,40.8089574,41.1542932,36.2277116,36.0122334,39.4744867,42.9846891,42.7490744,43.2324926,40.7242204,40.7114174,40.9147462,35.1055517,32.3264441,35.2850958,40.6642738,42.8924919,43.1699272,35.2087069,35.8302035,36.0964835,46.8652063,46.8110381,47.9127893,39.9847989,41.4781381,39.1399019,35.4670795,36.1279488,35.2405774,45.5369506,44.0567484,44.9236937,40.0093755,40.4397525,40.5939656,41.8230556,41.7007569,41.7697341,34.0297833,32.8179219,32.9173424,43.5383351,44.0710712,45.4646777,35.1035431,36.1718001,35.9708752,29.7804724,29.4724026,32.794176,40.7785197,40.6884927,40.2453301,44.4919905,44.4364933,43.6096702,36.7793219,36.9230149,36.6793761,47.6204993,47.6735545,47.2521991,38.3486917,38.4106509,39.2613533,43.0633484,43.0878055,44.5206763,41.1521947,42.8405322,41.3102405],[-86.799047,-86.2685927,-88.1002261,-112.0879662,-110.8710622,-111.7173787,-92.35855599999999,-94.37088300000001,-94.16653959999999,-118.4108248,-117.134993,-121.8193058,-104.8806251,-104.760749,-104.68974,-73.19573389999999,-72.924953,-72.68333939999999,-75.52928919999999,-75.5216585,-75.7573084,-81.6613021,-80.2086152,-82.4796734,-84.4226745,-82.0734219,-84.87494599999999,-116.2310843,-116.5638753,-116.397129,-87.68184410000001,-88.290099,-89.06282710000001,-86.14593549999999,-85.14388,-87.53470299999999,-93.616708,-91.6777599,-90.6039968,-97.3426776,-94.69058389999999,-94.7417813,-85.6667077,-84.45844289999999,-86.4384623,-89.93900739999999,-91.1258993,-93.79268449999999,-70.255365,-70.17218509999999,-68.7923966,-76.6105159,-77.4127579,-77.1556178,-71.0201725,-71.80778309999999,-72.5399783,-83.1022365,-85.65557010000001,-83.02500070000001,-93.2682835,-93.1038552,-92.4772105,-90.2128226,-89.071845,-89.977981,-94.5511362,-90.2445816,-93.29130480000001,-108.5498909,-114.0103464,-111.299975,-96.04192690000001,-96.6803544,-95.93283839999999,-115.2640448,-115.0374619,-119.7765384,-71.44389320000001,-71.4905435,-71.56125230000001,-74.1725735,-74.0647599,-74.1628255,-106.6473884,-106.7896951,-106.6988694,-73.9385004,-78.8596862,-77.6168907,-80.8307389,-78.6414394,-79.8271079,-96.8290052,-100.7701017,-97.0750101,-82.9850438,-81.67948610000001,-84.5064465,-97.5136565,-95.9023162,-97.3453056,-122.649971,-123.1162068,-123.0231194,-75.13334589999999,-79.9765919,-75.4781595,-71.4187795,-71.42033429999999,-71.4850489,-80.8965664,-79.95892670000001,-80.06514970000001,-96.7319985,-103.2179242,-98.468104,-89.97849840000001,-86.7850016,-83.9464787,-95.3863425,-98.52514189999999,-96.76550330000001,-111.9314142,-112.0117586,-111.6448069,-73.2393625,-73.1826185,-72.97778839999999,-76.0240202,-76.2446413,-76.30178840000001,-122.3508761,-117.4165955,-122.4598318,-81.632324,-82.4346886,-81.54337630000001,-87.9666952,-89.4301208,-87.9841686,-104.7832381,-106.3201684,-105.6096249],[21223.7,20576.4,19511.1,144563.2,52011.6,43904.1,19352.4,8620.9,7358,379262.1,130740.2,94594.2,60015.8,41642.7,32507.8,14422.9,12977.9,12477.5,7085.1,3604.7,3145.4,82178.39999999999,39945.7,33570.9,42000.3,19584.4,18988.5,20567.1,8155.7,7509.2,269559.8,19789.9,15287.1,82044.5,25369.1,11742.9,20343.3,12632.6,9968.5,38236.8,17337.2,14578.6,59733.7,29580.3,5806.7,34382.9,22949.3,19931.1,6619.4,3659.2,3303.9,62096.1,6523.9,6120.9,61759.4,18104.5,15306,71377.7,18804,13405.6,38257.8,28506.8,10676.9,17351.4,6779.3,4898.2,45978.7,31929.4,15949.8,10417,6678.8,5850.5,40895.8,25837.9,5013.7,58375.6,25772.9,22522.1,10956.5,8649.4,4269.5,27714,24759.7,14619.9,54585.2,9761.799999999999,8752.1,817513.3,26131,21056.5,73142.39999999999,40389.2,26966.6,10554.9,6127.2,5283.8,78703.3,39681.5,29694.3,57999.9,39190.6,11092.5,58377.6,15618.5,15463.7,152600.6,30570.4,11803.2,17804.2,8267.200000000001,8038.7,12927.2,12008.3,9747.1,15388.8,6795.6,2609.1,64688.9,60122.2,17887.4,209945.1,132740.7,119781.6,18644,12948,11248.8,4241.7,1790.4,1649.5,43799.4,24280.3,22220.9,60866,20891.6,19839.7,5140,4913.8,3149.2,59483.3,23320.9,10405.7,5946.6,5531.6,3081.6],null,null,{"interactive":true,"className":"","stroke":true,"color":["#0100FF","#0100FF","#0100FF","#160AFF","#0703FF","#0602FF","#0100FF","#808080","#808080","#2918FE","#1409FF","#0F06FF","#0903FF","#0502FF","#0301FF","#808080","#808080","#808080","#808080","#808080","#808080","#0D05FF","#0502FF","#0301FF","#0502FF","#0100FF","#0100FF","#0100FF","#808080","#808080","#2212FE","#0100FF","#808080","#0D05FF","#0201FF","#808080","#0100FF","#808080","#808080","#0402FF","#0000FF","#808080","#0903FF","#0301FF","#808080","#0401FF","#0100FF","#0100FF","#808080","#808080","#808080","#0903FF","#808080","#808080","#0903FF","#0000FF","#808080","#0B04FF","#0000FF","#808080","#0402FF","#0201FF","#808080","#0000FF","#808080","#808080","#0602FF","#0301FF","#808080","#808080","#808080","#808080","#0502FF","#0201FF","#808080","#0903FF","#0201FF","#0100FF","#808080","#808080","#808080","#0201FF","#0201FF","#808080","#0803FF","#808080","#808080","#3F29FD","#0201FF","#0100FF","#0C04FF","#0502FF","#0201FF","#808080","#808080","#808080","#0D05FF","#0502FF","#0301FF","#0803FF","#0502FF","#808080","#0903FF","#808080","#808080","#170BFF","#0301FF","#808080","#0000FF","#808080","#808080","#808080","#808080","#808080","#808080","#808080","#808080","#0A04FF","#0903FF","#0000FF","#1D0FFF","#1409FF","#1308FF","#0000FF","#808080","#808080","#808080","#808080","#808080","#0602FF","#0201FF","#0100FF","#0903FF","#0100FF","#0100FF","#808080","#808080","#808080","#0903FF","#0101FF","#808080","#808080","#808080","#808080"],"weight":5,"opacity":0.5,"fill":true,"fillColor":["#0100FF","#0100FF","#0100FF","#160AFF","#0703FF","#0602FF","#0100FF","#808080","#808080","#2918FE","#1409FF","#0F06FF","#0903FF","#0502FF","#0301FF","#808080","#808080","#808080","#808080","#808080","#808080","#0D05FF","#0502FF","#0301FF","#0502FF","#0100FF","#0100FF","#0100FF","#808080","#808080","#2212FE","#0100FF","#808080","#0D05FF","#0201FF","#808080","#0100FF","#808080","#808080","#0402FF","#0000FF","#808080","#0903FF","#0301FF","#808080","#0401FF","#0100FF","#0100FF","#808080","#808080","#808080","#0903FF","#808080","#808080","#0903FF","#0000FF","#808080","#0B04FF","#0000FF","#808080","#0402FF","#0201FF","#808080","#0000FF","#808080","#808080","#0602FF","#0301FF","#808080","#808080","#808080","#808080","#0502FF","#0201FF","#808080","#0903FF","#0201FF","#0100FF","#808080","#808080","#808080","#0201FF","#0201FF","#808080","#0803FF","#808080","#808080","#3F29FD","#0201FF","#0100FF","#0C04FF","#0502FF","#0201FF","#808080","#808080","#808080","#0D05FF","#0502FF","#0301FF","#0803FF","#0502FF","#808080","#0903FF","#808080","#808080","#170BFF","#0301FF","#808080","#0000FF","#808080","#808080","#808080","#808080","#808080","#808080","#808080","#808080","#0A04FF","#0903FF","#0000FF","#1D0FFF","#1409FF","#1308FF","#0000FF","#808080","#808080","#808080","#808080","#808080","#0602FF","#0201FF","#0100FF","#0903FF","#0100FF","#0100FF","#808080","#808080","#808080","#0903FF","#0101FF","#808080","#808080","#808080","#808080"],"fillOpacity":0.1},null,null,["Birmingham = Population 212237","Montgomery = Population 205764","Mobile = Population 195111","Phoenix = Population 1445632","Tucson = Population 520116","Mesa = Population 439041","Little Rock = Population 193524","Fort Smith = Population 86209","Fayetteville = Population 73580","Los Angeles = Population 3792621","San Diego = Population 1307402","San Jose = Population 945942","Denver = Population 600158","Colorado Springs = Population 416427","Aurora = Population 325078","Bridgeport = Population 144229","New Haven = Population 129779","Hartford = Population 124775","Wilmington = Population 70851","Dover = Population 36047","Newark = Population 31454","Jacksonville = Population 821784","Miami = Population 399457","Tampa = Population 335709","Atlanta = Population 420003","Augusta = Population 195844","Columbus = Population 189885","Boise = Population 205671","Nampa = Population 81557","Meridian = Population 75092","Chicago = Population 2695598","Aurora = Population 197899","Rockford = Population 152871","Indianapolis = Population 820445","Fort Wayne = Population 253691","Evansville = Population 117429","Des Moines = Population 203433","Cedar Rapids = Population 126326","Davenport = Population 99685","Wichita = Population 382368","Overland Park = Population 173372","Kansas City = Population 145786","Louisville = Population 597337","Lexington = Population 295803","Bowling Green = Population 58067","New Orleans = Population 343829","Baton Rouge = Population 229493","Shreveport = Population 199311","Portland = Population 66194","Lewiston = Population 36592","Bangor = Population 33039","Baltimore = Population 620961","Frederick = Population 65239","Rockville = Population 61209","Boston = Population 617594","Worcester = Population 181045","Springfield = Population 153060","Detroit = Population 713777","Grand Rapids = Population 188040","Warren = Population 134056","Minneapolis = Population 382578","St. Paul = Population 285068","Rochester = Population 106769","Jackson = Population 173514","Gulfport = Population 67793","Southaven = Population 48982","Kansas City = Population 459787","St. Louis = Population 319294","Springfield = Population 159498","Billings = Population 104170","Missoula = Population 66788","Great Falls = Population 58505","Omaha = Population 408958","Lincoln = Population 258379","Bellevue = Population 50137","Las Vegas = Population 583756","Henderson = Population 257729","Reno = Population 225221","Manchester = Population 109565","Nashua = Population 86494","Concord = Population 42695","Newark = Population 277140","Jersey City = Population 247597","Paterson = Population 146199","Albuquerque = Population 545852","Las Cruces = Population 97618","Rio Rancho = Population 87521","New York City = Population 8175133","Buffalo = Population 261310","Rochester = Population 210565","Charlotte = Population 731424","Raleigh = Population 403892","Greensboro = Population 269666","Fargo = Population 105549","Bismarck = Population 61272","Grand Forks = Population 52838","Columbus = Population 787033","Cleveland = Population 396815","Cincinnati = Population 296943","Oklahoma City = Population 579999","Tulsa = Population 391906","Norman = Population 110925","Portland = Population 583776","Eugene = Population 156185","Salem = Population 154637","Philadelphia = Population 1526006","Pittsburgh = Population 305704","Allentown = Population 118032","Providence = Population 178042","Warwick = Population 82672","Cranston = Population 80387","Columbia = Population 129272","Charleston = Population 120083","North Charleston = Population 97471","Sioux Falls = Population 153888","Rapid City = Population 67956","Aberdeen = Population 26091","Memphis = Population 646889","Nashville = Population 601222","Knoxville = Population 178874","Houston = Population 2099451","San Antonio = Population 1327407","Dallas = Population 1197816","Salt Lake City = Population 186440","West Valley City = Population 129480","Provo = Population 112488","Burlington = Population 42417","South Burlington = Population 17904","Rutland = Population 16495","Virginia Beach = Population 437994","Norfolk = Population 242803","Chesapeake = Population 222209","Seattle = Population 608660","Spokane = Population 208916","Tacoma = Population 198397","Charleston = Population 51400","Huntington = Population 49138","Parkersburg = Population 31492","Milwaukee = Population 594833","Madison = Population 233209","Green Bay = Population 104057","Cheyenne = Population 59466","Casper = Population 55316","Laramie = Population 30816"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null,null]}],"limits":{"lat":[25.775163,47.9127893],"lng":[-123.1162068,-68.7923966]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
+
+</main>
+<!-- /main column -->
+<script id="quarto-html-after-body" type="application/javascript">
+window.document.addEventListener("DOMContentLoaded", function (event) {
+  const toggleBodyColorMode = (bsSheetEl) => {
+    const mode = bsSheetEl.getAttribute("data-mode");
+    const bodyEl = window.document.querySelector("body");
+    if (mode === "dark") {
+      bodyEl.classList.add("quarto-dark");
+      bodyEl.classList.remove("quarto-light");
+    } else {
+      bodyEl.classList.add("quarto-light");
+      bodyEl.classList.remove("quarto-dark");
+    }
+  }
+  const toggleBodyColorPrimary = () => {
+    const bsSheetEl = window.document.querySelector("link#quarto-bootstrap");
+    if (bsSheetEl) {
+      toggleBodyColorMode(bsSheetEl);
+    }
+  }
+  toggleBodyColorPrimary();  
+  const icon = "";
+  const anchorJS = new window.AnchorJS();
+  anchorJS.options = {
+    placement: 'right',
+    icon: icon
+  };
+  anchorJS.add('.anchored');
+  const isCodeAnnotation = (el) => {
+    for (const clz of el.classList) {
+      if (clz.startsWith('code-annotation-')) {                     
+        return true;
+      }
+    }
+    return false;
+  }
+  const clipboard = new window.ClipboardJS('.code-copy-button', {
+    text: function(trigger) {
+      const codeEl = trigger.previousElementSibling.cloneNode(true);
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+  });
+  clipboard.on('success', function(e) {
+    // button target
+    const button = e.trigger;
+    // don't keep focus
+    button.blur();
+    // flash "checked"
+    button.classList.add('code-copy-button-checked');
+    var currentTitle = button.getAttribute("title");
+    button.setAttribute("title", "Copied!");
+    let tooltip;
+    if (window.bootstrap) {
+      button.setAttribute("data-bs-toggle", "tooltip");
+      button.setAttribute("data-bs-placement", "left");
+      button.setAttribute("data-bs-title", "Copied!");
+      tooltip = new bootstrap.Tooltip(button, 
+        { trigger: "manual", 
+          customClass: "code-copy-button-tooltip",
+          offset: [0, -8]});
+      tooltip.show();    
+    }
+    setTimeout(function() {
+      if (tooltip) {
+        tooltip.hide();
+        button.removeAttribute("data-bs-title");
+        button.removeAttribute("data-bs-toggle");
+        button.removeAttribute("data-bs-placement");
+      }
+      button.setAttribute("title", currentTitle);
+      button.classList.remove('code-copy-button-checked');
+    }, 1000);
+    // clear code selection
+    e.clearSelection();
+  });
+    var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+    var mailtoRegex = new RegExp(/^mailto:/);
+      var filterRegex = new RegExp('/' + window.location.host + '/');
+    var isInternal = (href) => {
+        return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+    }
+    // Inspect non-navigation links and adorn them if external
+ 	var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool)');
+    for (var i=0; i<links.length; i++) {
+      const link = links[i];
+      if (!isInternal(link.href)) {
+        // undo the damage that might have been done by quarto-nav.js in the case of
+        // links that we want to consider external
+        if (link.dataset.originalHref !== undefined) {
+          link.href = link.dataset.originalHref;
+        }
+      }
+    }
+  function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+    const config = {
+      allowHTML: true,
+      maxWidth: 500,
+      delay: 100,
+      arrow: false,
+      appendTo: function(el) {
+          return el.parentElement;
+      },
+      interactive: true,
+      interactiveBorder: 10,
+      theme: 'quarto',
+      placement: 'bottom-start',
+    };
+    if (contentFn) {
+      config.content = contentFn;
+    }
+    if (onTriggerFn) {
+      config.onTrigger = onTriggerFn;
+    }
+    if (onUntriggerFn) {
+      config.onUntrigger = onUntriggerFn;
+    }
+    window.tippy(el, config); 
+  }
+  const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+  for (var i=0; i<noterefs.length; i++) {
+    const ref = noterefs[i];
+    tippyHover(ref, function() {
+      // use id or data attribute instead here
+      let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+      try { href = new URL(href).hash; } catch {}
+      const id = href.replace(/^#\/?/, "");
+      const note = window.document.getElementById(id);
+      if (note) {
+        return note.innerHTML;
+      } else {
+        return "";
+      }
+    });
+  }
+  const xrefs = window.document.querySelectorAll('a.quarto-xref');
+  const processXRef = (id, note) => {
+    // Strip column container classes
+    const stripColumnClz = (el) => {
+      el.classList.remove("page-full", "page-columns");
+      if (el.children) {
+        for (const child of el.children) {
+          stripColumnClz(child);
+        }
+      }
+    }
+    stripColumnClz(note)
+    if (id === null || id.startsWith('sec-')) {
+      // Special case sections, only their first couple elements
+      const container = document.createElement("div");
+      if (note.children && note.children.length > 2) {
+        container.appendChild(note.children[0].cloneNode(true));
+        for (let i = 1; i < note.children.length; i++) {
+          const child = note.children[i];
+          if (child.tagName === "P" && child.innerText === "") {
+            continue;
+          } else {
+            container.appendChild(child.cloneNode(true));
+            break;
+          }
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(container);
+        }
+        return container.innerHTML
+      } else {
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        return note.innerHTML;
+      }
+    } else {
+      // Remove any anchor links if they are present
+      const anchorLink = note.querySelector('a.anchorjs-link');
+      if (anchorLink) {
+        anchorLink.remove();
+      }
+      if (window.Quarto?.typesetMath) {
+        window.Quarto.typesetMath(note);
+      }
+      // TODO in 1.5, we should make sure this works without a callout special case
+      if (note.classList.contains("callout")) {
+        return note.outerHTML;
+      } else {
+        return note.innerHTML;
+      }
+    }
+  }
+  for (var i=0; i<xrefs.length; i++) {
+    const xref = xrefs[i];
+    tippyHover(xref, undefined, function(instance) {
+      instance.disable();
+      let url = xref.getAttribute('href');
+      let hash = undefined; 
+      if (url.startsWith('#')) {
+        hash = url;
+      } else {
+        try { hash = new URL(url).hash; } catch {}
+      }
+      if (hash) {
+        const id = hash.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note !== null) {
+          try {
+            const html = processXRef(id, note.cloneNode(true));
+            instance.setContent(html);
+          } finally {
+            instance.enable();
+            instance.show();
+          }
+        } else {
+          // See if we can fetch this
+          fetch(url.split('#')[0])
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.getElementById(id);
+            if (note !== null) {
+              const html = processXRef(id, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      } else {
+        // See if we can fetch a full url (with no hash to target)
+        // This is a special case and we should probably do some content thinning / targeting
+        fetch(url)
+        .then(res => res.text())
+        .then(html => {
+          const parser = new DOMParser();
+          const htmlDoc = parser.parseFromString(html, "text/html");
+          const note = htmlDoc.querySelector('main.content');
+          if (note !== null) {
+            // This should only happen for chapter cross references
+            // (since there is no id in the URL)
+            // remove the first header
+            if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+              note.children[0].remove();
+            }
+            const html = processXRef(null, note);
+            instance.setContent(html);
+          } 
+        }).finally(() => {
+          instance.enable();
+          instance.show();
+        });
+      }
+    }, function(instance) {
+    });
+  }
+      let selectedAnnoteEl;
+      const selectorForAnnotation = ( cell, annotation) => {
+        let cellAttr = 'data-code-cell="' + cell + '"';
+        let lineAttr = 'data-code-annotation="' +  annotation + '"';
+        const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+        return selector;
+      }
+      const selectCodeLines = (annoteEl) => {
+        const doc = window.document;
+        const targetCell = annoteEl.getAttribute("data-target-cell");
+        const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+        const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+        const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+        const lineIds = lines.map((line) => {
+          return targetCell + "-" + line;
+        })
+        let top = null;
+        let height = null;
+        let parent = null;
+        if (lineIds.length > 0) {
+            //compute the position of the single el (top and bottom and make a div)
+            const el = window.document.getElementById(lineIds[0]);
+            top = el.offsetTop;
+            height = el.offsetHeight;
+            parent = el.parentElement.parentElement;
+          if (lineIds.length > 1) {
+            const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+            const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+            height = bottom - top;
+          }
+          if (top !== null && height !== null && parent !== null) {
+            // cook up a div (if necessary) and position it 
+            let div = window.document.getElementById("code-annotation-line-highlight");
+            if (div === null) {
+              div = window.document.createElement("div");
+              div.setAttribute("id", "code-annotation-line-highlight");
+              div.style.position = 'absolute';
+              parent.appendChild(div);
+            }
+            div.style.top = top - 2 + "px";
+            div.style.height = height + 4 + "px";
+            div.style.left = 0;
+            let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+            if (gutterDiv === null) {
+              gutterDiv = window.document.createElement("div");
+              gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+              gutterDiv.style.position = 'absolute';
+              const codeCell = window.document.getElementById(targetCell);
+              const gutter = codeCell.querySelector('.code-annotation-gutter');
+              gutter.appendChild(gutterDiv);
+            }
+            gutterDiv.style.top = top - 2 + "px";
+            gutterDiv.style.height = height + 4 + "px";
+          }
+          selectedAnnoteEl = annoteEl;
+        }
+      };
+      const unselectCodeLines = () => {
+        const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+        elementsIds.forEach((elId) => {
+          const div = window.document.getElementById(elId);
+          if (div) {
+            div.remove();
+          }
+        });
+        selectedAnnoteEl = undefined;
+      };
+        // Handle positioning of the toggle
+    window.addEventListener(
+      "resize",
+      throttle(() => {
+        elRect = undefined;
+        if (selectedAnnoteEl) {
+          selectCodeLines(selectedAnnoteEl);
+        }
+      }, 10)
+    );
+    function throttle(fn, ms) {
+    let throttle = false;
+    let timer;
+      return (...args) => {
+        if(!throttle) { // first call gets through
+            fn.apply(this, args);
+            throttle = true;
+        } else { // all the others get throttled
+            if(timer) clearTimeout(timer); // cancel #2
+            timer = setTimeout(() => {
+              fn.apply(this, args);
+              timer = throttle = false;
+            }, ms);
+        }
+      };
+    }
+      // Attach click handler to the DT
+      const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+      for (const annoteDlNode of annoteDls) {
+        annoteDlNode.addEventListener('click', (event) => {
+          const clickedEl = event.target;
+          if (clickedEl !== selectedAnnoteEl) {
+            unselectCodeLines();
+            const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+            if (activeEl) {
+              activeEl.classList.remove('code-annotation-active');
+            }
+            selectCodeLines(clickedEl);
+            clickedEl.classList.add('code-annotation-active');
+          } else {
+            // Unselect the line
+            unselectCodeLines();
+            clickedEl.classList.remove('code-annotation-active');
+          }
+        });
+      }
+  const findCites = (el) => {
+    const parentEl = el.parentElement;
+    if (parentEl) {
+      const cites = parentEl.dataset.cites;
+      if (cites) {
+        return {
+          el,
+          cites: cites.split(' ')
+        };
+      } else {
+        return findCites(el.parentElement)
+      }
+    } else {
+      return undefined;
+    }
+  };
+  var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+  for (var i=0; i<bibliorefs.length; i++) {
+    const ref = bibliorefs[i];
+    const citeInfo = findCites(ref);
+    if (citeInfo) {
+      tippyHover(citeInfo.el, function() {
+        var popup = window.document.createElement('div');
+        citeInfo.cites.forEach(function(cite) {
+          var citeDiv = window.document.createElement('div');
+          citeDiv.classList.add('hanging-indent');
+          citeDiv.classList.add('csl-entry');
+          var biblioDiv = window.document.getElementById('ref-' + cite);
+          if (biblioDiv) {
+            citeDiv.innerHTML = biblioDiv.innerHTML;
+          }
+          popup.appendChild(citeDiv);
+        });
+        return popup.innerHTML;
+      });
+    }
+  }
+});
+</script>
+</div> <!-- /content -->
+
+
+
+
+</body></html>

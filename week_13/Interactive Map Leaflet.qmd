@@ -1,0 +1,43 @@
+---
+title: "Interactive Map Leaflet"
+format: html
+editor: visual
+---
+
+```{r}
+library(tidyverse)
+library(leaflet)
+library(USAboundaries)
+library(ggrepel)
+```
+
+
+```{r}
+
+US_cities <- us_cities() %>%
+  filter(!state_name %in% c("Puerto Rico", "Alaska", "Hawaii", "District of Columbia")) %>% 
+  select(c(city, state_name, population)) %>% 
+  group_by(state_name) %>% 
+  slice_max(population, n = 3) %>% 
+  arrange(desc(population), .by_group = TRUE) %>% 
+  mutate(rank = c(1, 2, 3))
+
+```
+
+
+```{r}
+pal<-colorNumeric(palette = c("blue", "lightblue"), 
+                  domain = US_cities$population)
+
+leaflet(data = US_cities) %>% 
+  addProviderTiles(providers$OpenStreetMap.HOT) %>% 
+  addCircles(radius = US_cities$population/10,
+             label = ~paste(city, "=", "Population", population),
+             fillOpacity = .1,
+             color = ~pal(population/10),
+             fillColor = ~pal(population/10))
+
+```
+
+
+
